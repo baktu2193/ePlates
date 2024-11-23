@@ -83,7 +83,13 @@ export default function PlateBuilder() {
                   className="w-full grid gap-3"
                 />
               </TabsContent>
-              <TabsContent value="style" className="col-span-2 h-[390px]">
+              <TabsContent value="sizing" className="col-span-2 h-[390px]">
+                <STYLE />
+              </TabsContent>
+              <TabsContent value="border" className="col-span-2 h-[390px]">
+                <STYLE />
+              </TabsContent>
+              <TabsContent value="finish" className="col-span-2 h-[390px]">
                 <STYLE />
               </TabsContent>
 
