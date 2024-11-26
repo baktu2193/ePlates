@@ -6,14 +6,15 @@ import PlateSummary from "@/components/PlateBuilder/PlateSummary";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
+import { PlateStyleOption, plateStyles } from "../../../PlateStyles";
 
 export default function PlateBuilder() {
-  const [plateNumber, setPlateNumber] = useState("");
+  const [plateNumber, setPlateNumber] = useState("MD 22");
   const [roadLegalSpacing, setRoadLegalSpacing] = useState(true);
   const [iWantFrontPlate, setIWantFrontPlate] = useState(true);
   const [iWantBackPlate, setIWantBackPlate] = useState(true);
-  const [frontStyle, setFrontStyle] = useState("4D 5mm");
-  const [rearStyle, setRearStyle] = useState("4D 5mm");
+  const [frontStyle, setFrontStyle] = useState<PlateStyleOption>(plateStyles[0]);
+  const [rearStyle, setRearStyle] = useState<PlateStyleOption>(plateStyles[0]);
   const [frontPrice, setFrontPrice] = useState(23.99);
   const [rearPrice, setRearPrice] = useState(23.99);
 
@@ -83,14 +84,14 @@ export default function PlateBuilder() {
                   className="w-full grid gap-3"
                 />
               </TabsContent>
-              <TabsContent value="sizing" className="col-span-2 h-[390px]">
-                <STYLE />
+              <TabsContent value="style" className="col-span-2 h-[390px]">
+                <STYLE rearStyle={rearStyle} frontStyle={frontStyle} setRearStyle={setRearStyle} setFrontStyle={setFrontStyle} />
               </TabsContent>
               <TabsContent value="border" className="col-span-2 h-[390px]">
-                <STYLE />
+              <STYLE rearStyle={rearStyle} frontStyle={frontStyle} setRearStyle={setRearStyle} setFrontStyle={setFrontStyle} />
               </TabsContent>
               <TabsContent value="finish" className="col-span-2 h-[390px]">
-                <STYLE />
+              <STYLE rearStyle={rearStyle} frontStyle={frontStyle} setRearStyle={setRearStyle} setFrontStyle={setFrontStyle} />
               </TabsContent>
 
               {/* Plate Displayer */}
@@ -102,7 +103,12 @@ export default function PlateBuilder() {
                     <Button className={isRear?" bg-transparent":""} onClick={()=>setIsRear(false)} >FRONT PLATE</Button>
                     <Button className={!isRear?" bg-transparent":""} onClick={()=>setIsRear(true)}>REAR PLATE</Button>
                 </div>
-                <ThreeDRectangle isRear={isRear} plateNumber={plateNumber} />
+                {
+                  isRear?
+                  <ThreeDRectangle isRear={true} plateNumber={plateNumber} plateStyle={rearStyle} />
+                  :
+                  <ThreeDRectangle isRear={false} plateNumber={plateNumber} plateStyle={frontStyle}  />
+                }
               </div>
             </div>
           </Tabs>

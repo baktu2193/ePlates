@@ -1,10 +1,11 @@
 import React from "react";
+import { PlateStyleOption } from "../../../PlateStyles";
 
 interface PlateSummaryProps {
   plateNumber: string;
   roadLegalSpacing: boolean;
-  frontStyle: string;
-  rearStyle: string;
+  frontStyle: PlateStyleOption;
+  rearStyle: PlateStyleOption;
   frontPrice: number;
   rearPrice: number;
 }
@@ -41,7 +42,7 @@ const PlateSummary: React.FC<PlateSummaryProps> = ({
         <h3 className="text-base font-bold text-gray-800 mb-2">Front Plate</h3>
         <div className="flex justify-between text-sm mb-1">
           <p>Style</p>
-          <p className="font-bold">{frontStyle}</p>
+          <p className="font-bold">{frontStyle.name}</p>
         </div>
         <div className="flex justify-between text-sm mb-1">
           <p>Size</p>
@@ -58,7 +59,7 @@ const PlateSummary: React.FC<PlateSummaryProps> = ({
         <h3 className="text-base font-bold text-gray-800 mb-2">Rear Plate</h3>
         <div className="flex justify-between text-sm mb-1">
           <p>Style</p>
-          <p className="font-bold">{rearStyle}</p>
+          <p className="font-bold">{rearStyle.name}</p>
         </div>
         <div className="flex justify-between text-sm mb-1">
           <p>Size</p>
