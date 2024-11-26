@@ -1,22 +1,40 @@
 'use client'
 
-import { Start, STYLE } from "@/components/PlateBuilder/Components";
+import { SIZING, Start, STYLE } from "@/components/PlateBuilder/Components";
 import ThreeDRectangle from "@/components/PlateBuilder/Plate";
 import PlateSummary from "@/components/PlateBuilder/PlateSummary";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
-import { PlateStyleOption, plateStyles } from "../../../PlateStyles";
+import {  Plate, PlateSize, plateStyles } from "../../../PlateStyles";
 
 export default function PlateBuilder() {
   const [plateNumber, setPlateNumber] = useState("MD 22");
   const [roadLegalSpacing, setRoadLegalSpacing] = useState(true);
   const [iWantFrontPlate, setIWantFrontPlate] = useState(true);
   const [iWantBackPlate, setIWantBackPlate] = useState(true);
-  const [frontStyle, setFrontStyle] = useState<PlateStyleOption>(plateStyles[0]);
-  const [rearStyle, setRearStyle] = useState<PlateStyleOption>(plateStyles[0]);
+  const [frontStyle, setFrontStyle] = useState<Plate>(plateStyles[0]);
+  const [rearStyle, setRearStyle] = useState<Plate>(plateStyles[0]);
   const [frontPrice, setFrontPrice] = useState(23.99);
   const [rearPrice, setRearPrice] = useState(23.99);
+
+  const [frontSize, setFrontSize] = useState<PlateSize>(() => {
+    const sizes = plateStyles[0]?.frontPlate?.sizes as PlateSize[] | undefined;
+    if (sizes && sizes.length > 0) {
+      return sizes[0]; // Select the first size from the array
+    }
+    return { key: 'standard', width: 18, height: 18 }; // Default fallback
+  });
+  const [rearSize, setRearSize] = useState<PlateSize>(() => {
+    const sizes = plateStyles[0]?.frontPlate?.sizes as PlateSize[] | undefined;
+    if (sizes && sizes.length > 0) {
+      return sizes[0]; // Select the first size from the array
+    }
+    return { key: 'standard', width: 18, height: 18 }; // Default fallback
+  });
+  
+  
+  
 
   const [isRear,setIsRear]=useState(false)
 
@@ -87,11 +105,11 @@ export default function PlateBuilder() {
               <TabsContent value="style" className="col-span-2 h-[390px]">
                 <STYLE rearStyle={rearStyle} frontStyle={frontStyle} setRearStyle={setRearStyle} setFrontStyle={setFrontStyle} />
               </TabsContent>
-              <TabsContent value="border" className="col-span-2 h-[390px]">
-              <STYLE rearStyle={rearStyle} frontStyle={frontStyle} setRearStyle={setRearStyle} setFrontStyle={setFrontStyle} />
+              <TabsContent value="sizing" className="col-span-2 h-[390px]">
+                <SIZING rearStyle={rearStyle} frontStyle={frontStyle} rearSize={rearSize} frontSize={frontSize} setRearSize={setRearSize} setFrontSize={setFrontSize} />
               </TabsContent>
               <TabsContent value="finish" className="col-span-2 h-[390px]">
-              <STYLE rearStyle={rearStyle} frontStyle={frontStyle} setRearStyle={setRearStyle} setFrontStyle={setFrontStyle} />
+                <STYLE rearStyle={rearStyle} frontStyle={frontStyle} setRearStyle={setRearStyle} setFrontStyle={setFrontStyle} />
               </TabsContent>
 
               {/* Plate Displayer */}
@@ -105,9 +123,9 @@ export default function PlateBuilder() {
                 </div>
                 {
                   isRear?
-                  <ThreeDRectangle isRear={true} plateNumber={plateNumber} plateStyle={rearStyle} />
+                  <ThreeDRectangle isRear={true} size={rearSize} plateNumber={plateNumber} plateStyle={rearStyle} />
                   :
-                  <ThreeDRectangle isRear={false} plateNumber={plateNumber} plateStyle={frontStyle}  />
+                  <ThreeDRectangle isRear={false} size={frontSize} plateNumber={plateNumber} plateStyle={frontStyle}  />
                 }
               </div>
             </div>

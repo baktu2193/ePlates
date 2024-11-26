@@ -5,7 +5,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
-import { PlateStyleOption } from "../../../PlateStyles";
+import { Plate, PlateSize } from "../../../PlateStyles";
 
 // Create a rounded rectangle shape
 const createRoundedRectShape = (width: number, height: number, radius: number) => {
@@ -26,9 +26,10 @@ const createRoundedRectShape = (width: number, height: number, radius: number) =
 };
 
 interface PlateProps{
-  plateStyle: PlateStyleOption;
+  plateStyle: Plate;
   plateNumber:string,
-  isRear:boolean
+  isRear:boolean,
+  size:PlateSize
 }
 
 const ThreeDRectangle = ({ plateNumber, isRear,plateStyle }: PlateProps) => {
@@ -87,8 +88,8 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
   // Use plate style properties (thickness, height, and fontSize) dynamically
   const textGeometry = new TextGeometry(plateNumber, {
     font,
-    size: plateStyle.fontSize, // This controls the height of the letters (Y-axis)
-    height: plateStyle.thickness/10, // This controls the extrusion depth (Z-axis thickness)
+    size: 3, // This controls the height of the letters (Y-axis)
+    height: plateStyle.material.thickness==null?0:plateStyle.material.thickness/10, // This controls the extrusion depth (Z-axis thickness)
     curveSegments: 12, // Controls curve smoothness
   });
 
@@ -171,13 +172,12 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
   
         const textGeometry = new TextGeometry(plateNumber, {
           font,
-          size: plateStyle.fontSize, // Use font size from plateStyle
-          height: plateStyle.thickness/10, // Use height (extrusion depth) from plateStyle
-          curveSegments: 12,
+          size: 3, // Use font size from plateStyle
+          height: plateStyle.material.thickness==null?0:plateStyle.material.thickness/10, // This controls the extrusion depth (Z-axis thickness)          curveSegments: 12,
         });
   
         // Log to check geometry update
-        console.log("New text geometry created with size:", plateStyle.fontSize, "and height:", plateStyle.height);
+        console.log("New text geometry created with size:", 3, "and height:", plateStyle.material.thickness==null?0:plateStyle.material.thickness/10);
   
         // Dispose old geometry before setting the new one
         if (textMesh.geometry) {

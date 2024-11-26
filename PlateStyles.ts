@@ -1,147 +1,202 @@
-// Types for plate styles
-export interface PlateStyleOption {
-  name: string; // Name of the plate style
-  letters: number[]; // Number of letters allowed for the plate
-  frontSizes: string[]; // Available front size options (e.g., '18"', 'Standard 20.5"')
-  rearSizes: string[]; // Available rear size options (e.g., '18"', 'Square 11" x 8"')
-  border: string; // Description of the border style (e.g., 'Printed', '4D Acrylic')
-  thickness: number; // Plate material thickness (in mm)
-  height: number; // Text extrusion depth (in mm)
-  fontSize: number; // Text font size
-  colors?: string[]; // Available colors for neon plates (optional)
-  additionalDetails?: string; // Any extra details (optional)
+export interface PlateSize {
+  key:string;
+  width:number;
+  height:number;
 }
 
+export interface Material {
+  type: string;
+  thickness: number | null;
+}
+
+export interface Border {
+  name: string;
+  type: string | null;
+  material: Material | null;
+}
+
+export interface Plate {
+  letters: number;
+  name: string;
+  material: Material;
+  colour?: string[];
+  frontPlate: {
+    sizes: PlateSize[];
+  };
+  rearPlate: {
+    sizes: PlateSize[];
+  };
+  border: Border;
+  preview: boolean;
+}
   
-  const plateStyles: PlateStyleOption[] = [
-    {
-      name: '4D 3mm Acrylic',
-      letters: [7],
-      frontSizes: ['18"', 'Standard 20.5"', 'Hex 20.5"'],
-      rearSizes: ['18"', 'Standard 20.5"', 'Hex 20.5"', 'Square 11" x 8"'],
-      border: 'Printed - 4D 3mm Acrylic',
-      thickness: 3, // Plate material thickness in mm
-      height: 0.4,  // Text extrusion depth in mm
-      fontSize: 3,  // Text font size
+const plateStyles: Plate[] = [
+  {
+    letters: 7,
+    name: '4D 3mm Acrylic',
+    material: { type: '4D Acrylic', thickness: 3 },
+    frontPlate: {
+      sizes: [
+        { key: 'standard', width: 18, height: 18 },
+        { key: 'hex', width: 20.5, height: 20.5 }
+      ]
     },
-    {
-      name: '4D 5mm Acrylic',
-      letters: [7],
-      frontSizes: ['18"', 'Standard 20.5"', 'Hex 20.5"'],
-      rearSizes: ['18"', 'Standard 20.5"', 'Hex 20.5"', 'Square 11" x 8"'],
-      border: 'Printed - 4D 5mm Acrylic',
-      thickness: 5, // Plate material thickness in mm
-      height: 0.4,  // Text extrusion depth in mm
-      fontSize: 3,  // Text font size
+    rearPlate: {
+      sizes: [
+        { key: 'standard', width: 18, height: 18 },
+        { key: 'hex', width: 20.5, height: 20.5 },
+        { key: 'square', width: 20.5, height: 20.5 }
+      ]
     },
-    {
-      name: '3D Gel',
-      letters: [7],
-      frontSizes: ['18"', 'Standard 20.5"', 'Hex 20.5"'],
-      rearSizes: ['18"', 'Standard 20.5"', 'Hex 20.5"', 'Square 11" x 8"'],
-      border: 'Printed - 3D Gel',
-      thickness: 3, // Plate material thickness in mm
-      height: 0.4,  // Text extrusion depth in mm
-      fontSize: 3,  // Text font size
+    border: { name: '4D 3mm Acrylic', type: 'Printed', material: { type: '4D Acrylic', thickness: 3 } },
+    preview: true
+  },
+  {
+    letters: 7,
+    name: '4D 5mm Acrylic',
+    material: { type: '4D Acrylic', thickness: 5 },
+    frontPlate: {
+      sizes: [
+        { key: 'standard', width: 18, height: 18 },
+        { key: 'hex', width: 20.5, height: 20.5 }
+      ]
     },
-    {
-      name: '4D 3mm Acrylic and Gel',
-      letters: [7],
-      frontSizes: ['18"', 'Standard 20.5"', 'Hex 20.5"'],
-      rearSizes: ['18"', 'Standard 20.5"', 'Hex 20.5"', 'Square 11" x 8"'],
-      border: 'Printed - 4D 3mm Acrylic and Gel',
-      thickness: 3, // Plate material thickness in mm
-      height: 0.4,  // Text extrusion depth in mm
-      fontSize: 3,  // Text font size
+    rearPlate: {
+      sizes: [
+        { key: 'standard', width: 18, height: 18 },
+        { key: 'hex', width: 20.5, height: 20.5 },
+        { key: 'square', width: 20.5, height: 20.5 }
+      ]
     },
-    {
-      name: '4D 5mm Acrylic and Gel',
-      letters: [7],
-      frontSizes: ['18"', 'Standard 20.5"', 'Hex 20.5"'],
-      rearSizes: ['18"', 'Standard 20.5"', 'Hex 20.5"', 'Square 11" x 8"'],
-      border: 'Printed - 4D 5mm Acrylic and Gel',
-      thickness: 5, // Plate material thickness in mm
-      height: 0.4,  // Text extrusion depth in mm
-      fontSize: 3,  // Text font size
+    border: { name: '4D 5mm Acrylic', type: 'Printed', material: { type: '4D Acrylic', thickness: 5 } },
+    preview: true
+  },
+  {
+    letters: 7,
+    name: '3D Gel',
+    material: { type: 'Gel', thickness: null },
+    frontPlate: {
+      sizes: [
+        { key: 'standard', width: 18, height: 18 },
+        { key: 'hex', width: 20.5, height: 20.5 }
+      ]
     },
-    {
-      name: '4D 5mm Gel',
-      letters: [7],
-      frontSizes: ['18"', 'Standard 20.5"', 'Hex 20.5"'],
-      rearSizes: ['18"', 'Standard 20.5"', 'Hex 20.5"', 'Square 11" x 8"'],
-      border: 'Printed - 4D 5mm Gel',
-      thickness: 5, // Plate material thickness in mm
-      height: 0.4,  // Text extrusion depth in mm
-      fontSize: 3,  // Text font size
+    rearPlate: {
+      sizes: [
+        { key: 'standard', width: 18, height: 18 },
+        { key: 'hex', width: 20.5, height: 20.5 },
+        { key: 'square', width: 20.5, height: 20.5 }
+      ]
     },
-    {
-      name: 'Printed',
-      letters: [7],
-      frontSizes: ['18"', 'Standard 20.5"', 'Hex 20.5"'],
-      rearSizes: ['18"', 'Standard 20.5"', 'Hex 20.5"', 'Square 11" x 8"'],
-      border: 'Printed',
-      thickness: 3, // Plate material thickness in mm
-      height: 0.4,  // Text extrusion depth in mm
-      fontSize: 3,  // Text font size
+    border: { name: '4D 3mm Acrylic', type: 'Printed', material: { type: '4D Acrylic', thickness: 3 } },
+    preview: false
+  },
+  {
+    letters: 7,
+    name: '4D 3mm Acrylic and Gel',
+    material: { type: '4D Acrylic and Gel', thickness: 3 },
+    frontPlate: {
+      sizes: [
+        { key: 'standard', width: 18, height: 18 },
+        { key: 'hex', width: 20.5, height: 20.5 }
+      ]
     },
-    {
-      name: '4D Neon Acrylic',
-      letters: [7],
-      frontSizes: ['18"', 'Standard 20.5"', 'Hex 20.5"'],
-      rearSizes: ['18"', 'Standard 20.5"', 'Hex 20.5"', 'Square 11" x 8"'],
-      border: 'Printed - 4D 3mm Acrylic',
-      colors: ['Black on Red', 'Black on Blue', 'Black on Green'],
-      thickness: 3, // Plate material thickness in mm
-      height: 0.4,  // Text extrusion depth in mm
-      fontSize: 3,  // Text font size
+    rearPlate: {
+      sizes: [
+        { key: 'standard', width: 18, height: 18 },
+        { key: 'hex', width: 20.5, height: 20.5 },
+        { key: 'square', width: 20.5, height: 20.5 }
+      ]
     },
-    {
-      name: '4D Neon Acrylic and Gel',
-      letters: [7],
-      frontSizes: ['18"', 'Standard 20.5"', 'Hex 20.5"'],
-      rearSizes: ['18"', 'Standard 20.5"', 'Hex 20.5"', 'Square 11" x 8"'],
-      border: 'Printed - 4D 3mm Acrylic',
-      colors: ['Black on Red', 'Black on Blue', 'Black on Green'],
-      thickness: 3, // Plate material thickness in mm
-      height: 0.4,  // Text extrusion depth in mm
-      fontSize: 3,  // Text font size
+    border: { name: '4D 3mm Acrylic', type: 'Printed', material: { type: '4D Acrylic', thickness: 3 } },
+    preview: true
+  },
+  {
+    letters: 7,
+    name: '4D 5mm Acrylic and Gel',
+    material: { type: '4D Acrylic and Gel', thickness: 5 },
+    frontPlate: {
+      sizes: [
+        { key: 'standard', width: 18, height: 18 },
+        { key: 'hex', width: 20.5, height: 20.5 }
+      ]
     },
-    {
-      name: 'Bubble Plates',
-      letters: [7],
-      frontSizes: ['Custom'],
-      rearSizes: ['Custom Standard', 'Custom Square'],
-      additionalDetails: 'Gel only (NO PREVIEW AVAILABLE)',
-      border: 'Unavailable',
-      thickness: 3, // Plate material thickness in mm
-      height: 0.4,  // Text extrusion depth in mm
-      fontSize: 3,  // Text font size
+    rearPlate: {
+      sizes: [
+        { key: 'standard', width: 18, height: 18 },
+        { key: 'hex', width: 20.5, height: 20.5 },
+        { key: 'square', width: 20.5, height: 20.5 }
+      ]
     },
-    {
-      name: 'Motorbike Plates Printed',
-      letters: [7],
-      frontSizes: ['9" x 7"'],
-      rearSizes: ['9" x 7"'],
-      border: 'Printed',
-      thickness: 3, // Plate material thickness in mm
-      height: 0.4,  // Text extrusion depth in mm
-      fontSize: 3,  // Text font size
+    border: { name: '4D 3mm Acrylic', type: 'Printed', material: { type: '4D Acrylic', thickness: 3 } },
+    preview: false
+  },
+  {
+    letters: 7,
+    name: '4D 5mm Gel',
+    material: { type: 'Gel', thickness: 5 },
+    frontPlate: {
+      sizes: [
+        { key: 'standard', width: 18, height: 18 },
+        { key: 'hex', width: 20.5, height: 20.5 }
+      ]
     },
-    {
-      name: 'Motorbike Plates 4D Acrylic',
-      letters: [7],
-      frontSizes: ['9" x 7"'],
-      rearSizes: ['9" x 7"'],
-      border: '4D Acrylic - Printed',
-      thickness: 3, // Plate material thickness in mm
-      height: 0.4,  // Text extrusion depth in mm
-      fontSize: 3,  // Text font size
-    }
-  ];
-    
+    rearPlate: {
+      sizes: [
+        { key: 'standard', width: 18, height: 18 },
+        { key: 'hex', width: 20.5, height: 20.5 },
+        { key: 'square', width: 20.5, height: 20.5 }
+      ]
+    },
+    border: { name: '4D 5mm Acrylic', type: 'Printed', material: { type: '4D Acrylic', thickness: 5 } },
+    preview: true
+  },
+  {
+    letters: 7,
+    name: '5D 5mm Acrylic',
+    material: { type: '5D Acrylic', thickness: 5 },
+    frontPlate: {
+      sizes: [
+        { key: 'standard', width: 18, height: 18 },
+        { key: 'hex', width: 20.5, height: 20.5 }
+      ]
+    },
+    rearPlate: {
+      sizes: [
+        { key: 'standard', width: 18, height: 18 },
+        { key: 'hex', width: 20.5, height: 20.5 },
+        { key: 'square', width: 20.5, height: 20.5 }
+      ]
+    },
+    border: { name: '5D 5mm Acrylic', type: 'Printed', material: { type: '5D Acrylic', thickness: 5 } },
+    preview: false
+  },
+  {
+    letters: 7,
+    name: '6D 6mm Acrylic',
+    material: { type: '6D Acrylic', thickness: 6 },
+    frontPlate: {
+      sizes: [
+        { key: 'standard', width: 18, height: 18 },
+        { key: 'hex', width: 20.5, height: 20.5 }
+      ]
+    },
+    rearPlate: {
+      sizes: [
+        { key: 'standard', width: 18, height: 18 },
+        { key: 'hex', width: 20.5, height: 20.5 },
+        { key: 'square', width: 20.5, height: 20.5 }
+      ]
+    },
+    border: { name: '6D 6mm Acrylic', type: 'Printed', material: { type: '6D Acrylic', thickness: 6 } },
+    preview: true
+  }
+];
+
+   
   // Helper function to filter styles by number of letters
   function getStylesByLetterCount(letterCount: number) {
-    return plateStyles.filter(style => style.letters.includes(letterCount));
+    return plateStyles.filter(style => style.letters==(letterCount));
   }
   
   export { plateStyles, getStylesByLetterCount };
