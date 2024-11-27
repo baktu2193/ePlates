@@ -76,7 +76,7 @@ export function Start({
 }
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { getStylesByLetterCount, Plate, PlateSize } from "../../../PlateStyles";
+import { Border, getStylesByLetterCount, Plate, PlateSize } from "../../../PlateStyles";
 import Image from "next/image";
 import { Button } from "../ui/button";
 
@@ -180,11 +180,18 @@ export function SIZING({ className, frontSize,rearSize,frontStyle,rearStyle,setF
     }
   },[sameAsFront])
 
-  const handleFrontStyleClick = (style: PlateSize) => {
+  const handleFrontSizeClick = (style: PlateSize) => {
     setFrontSize(style); // This will update the state in the parent component
+    
   };
 
-  const handleRearStyleClick = (style: PlateSize) => {
+  useEffect(()=>{
+    if(sameAsFront){
+      setRearSize(frontSize)
+    }
+  },[frontSize])
+
+  const handleRearSizeClick = (style: PlateSize) => {
     setRearSize(style); // This will update the state in the parent component
   };
 
@@ -209,7 +216,7 @@ export function SIZING({ className, frontSize,rearSize,frontStyle,rearStyle,setF
             <div className="px-2 flex flex-wrap gap-1">
                   {
                     frontStyle.frontPlate.sizes.map((size)=>(
-                      <Button className="" variant={"outline"} key={size.key}>{size.width +"x"+ size.height}</Button>
+                      <Button onClick={()=>handleFrontSizeClick(size)} className={`bg-white p-1  border-2 ${frontSize.key==size.key?"border-black ":""}`} key={size.key}>{size.width +"x"+ size.height}</Button>
                     ))
                   }
                 </div>
@@ -233,10 +240,101 @@ export function SIZING({ className, frontSize,rearSize,frontStyle,rearStyle,setF
           <div className="px-2 flex flex-wrap gap-1">
                 {
                   rearStyle.rearPlate.sizes.map((size)=>(
-                    <Button className=" bg-white"  key={size.key}>{size.width +"x"+ size.height}</Button>
+                    <Button onClick={()=>handleRearSizeClick(size)} className={`bg-white p-1  border-2 ${rearSize.key==size.key?"border-black ":""}`}  key={size.key}>{size.width +"x"+ size.height}</Button>
                   ))
                 }
               </div>
+        </div>
+        )}
+      </TabsContent>
+    </Tabs>
+  );
+}
+
+interface BorderProps{
+  className?: string;
+  frontStyle:Plate;
+  rearStyle:Plate,
+  frontBorder:Border,
+  rearBorder:Border,
+  setFrontBorder: (style: Border) => void;
+  setRearBorder: (style: Border) => void;
+}
+
+export function BORDER({ className, frontBorder,rearBorder,frontStyle,rearStyle,setFrontBorder,setRearBorder }: BorderProps) {
+  const plateStyles = getStylesByLetterCount(7); // Assuming getStylesByLetterCount is a function that returns plate styles
+  const [sameAsFront, setSameAsFront] = useState(true);
+
+  useEffect(()=>{
+    if(sameAsFront){
+      setRearBorder(frontBorder)
+    }
+  },[sameAsFront])
+
+  const handleFrontSizeClick = (style: Border) => {
+    setFrontBorder(style); // This will update the state in the parent component
+    
+  };
+
+  useEffect(()=>{
+    if(sameAsFront){
+      setRearBorder(frontBorder)
+    }
+  },[frontBorder])
+
+  const handleRearSizeClick = (style: Border) => {
+    setRearBorder(style); // This will update the state in the parent component
+  };
+
+  return (
+    <Tabs defaultValue="front" className={`flex flex-col overflow-y-scroll items-stretch bg-yellow rounded-sm h-full ${className}`}>
+      <TabsList className="grid grid-cols-2 gap-2">
+        <TabsTrigger className="text-lg" value="front">
+          FRONT <span className="ml-2 font-extralight mt-2 text-base">STYLE</span>
+        </TabsTrigger>
+        <TabsTrigger className="text-lg" value="back">
+          BACK <span className="ml-2 font-extralight mt-2 text-base">STYLE</span>
+        </TabsTrigger>
+      </TabsList>
+
+      {/* Front Style Tab */}
+      <TabsContent value="front" className="flex flex-col gap-3 col-span-2 px-2 rounded-sm">
+          <div
+            className={` pb-2 rounded-sm  pt-[2px] px-[2px] bg-white`}
+          >
+            <div className=" relative h-[140px]"><Image src={"/178348.jpg"} alt="img" className=" rounded-t-sm" fill priority /></div>
+            <p className="px-2 py-2">{frontBorder.name}</p>
+            {/* <div className="px-2 flex flex-wrap gap-1">
+                  {
+                    frontStyle.frontPlate.sizes.map((size)=>(
+                      <Button onClick={()=>handleFrontSizeClick(size)} className={`bg-white p-1  border-2 ${frontSize.key==size.key?"border-black ":""}`} key={size.key}>{size.width +"x"+ size.height}</Button>
+                    ))
+                  }
+                </div> */}
+          </div>
+      </TabsContent>
+
+      {/* Rear Style Tab */}
+      <TabsContent value="back" className="flex flex-col gap-3 col-span-2 h-[390px] px-2 rounded-sm">
+        <div className="mt-2">
+          <Switch className="mr-3" checked={sameAsFront} onCheckedChange={(e) => setSameAsFront(e)} />
+          <label>Same as front</label>
+        </div>
+
+        {/* Conditionally render rear style options based on sameAsFront */}
+        {!sameAsFront && (
+          <div
+          className={` pb-2 rounded-sm  pt-[2px] px-[2px] bg-white`}
+        >
+          <div className=" relative h-[140px]"><Image src={"/178348.jpg"} alt="img" className=" rounded-t-sm" fill priority /></div>
+          <p className="px-2 py-2">{rearBorder.name}</p>
+          {/* <div className="px-2 flex flex-wrap gap-1">
+                {
+                  rearStyle.rearPlate.sizes.map((size)=>(
+                    <Button onClick={()=>handleRearSizeClick(size)} className={`bg-white p-1  border-2 ${rearSize.key==size.key?"border-black ":""}`}  key={size.key}>{size.width +"x"+ size.height}</Button>
+                  ))
+                }
+              </div> */}
         </div>
         )}
       </TabsContent>

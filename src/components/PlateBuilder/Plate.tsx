@@ -5,7 +5,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
-import { Plate, PlateSize } from "../../../PlateStyles";
+import { Border, Plate, PlateSize } from "../../../PlateStyles";
 
 // Create a rounded rectangle shape
 const createRoundedRectShape = (width: number, height: number, radius: number) => {
@@ -29,10 +29,11 @@ interface PlateProps{
   plateStyle: Plate;
   plateNumber:string,
   isRear:boolean,
-  size:PlateSize
+  size:PlateSize,
+  border:Border,
 }
 
-const ThreeDRectangle = ({ plateNumber, isRear,plateStyle }: PlateProps) => {
+const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlateProps) => {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const [scene, setScene] = useState<THREE.Scene | null>(null);
   const [textMesh, setTextMesh] = useState<THREE.Mesh | null>(null);
@@ -158,9 +159,35 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
   }, []); // Run only once when the component is mounted
 
   useEffect(() => {
+    if (scene && size) {
+      // Update plate geometry
+      const roundedRectShape = createRoundedRectShape(size.width, size.height, 0.5);
+      const extrudeSettings = {
+        depth: 0.2,
+        bevelEnabled: false,  // Optional: Set to true if you want bevels
+        curveSegments: 64,
+      };
+  
+      const plateGeometry = new THREE.ExtrudeGeometry(roundedRectShape, extrudeSettings);
+  
+      // Find the existing plate mesh
+      const plateMesh = scene.children.find((child) => child instanceof THREE.Mesh) as THREE.Mesh;
+      if (plateMesh) {
+        plateMesh.geometry.dispose(); // Dispose of the old geometry
+        plateMesh.geometry = plateGeometry; // Set the new geometry
+
+        // Add border based on the `border` prop
+      
+  
+        // Scale down the plate for easier viewing
+        const scaleFactor = 0.7; // Adjust this factor as needed
+        plateMesh.scale.set(scaleFactor, scaleFactor, scaleFactor);
+      }
+    }
+  
     if (textMesh && plateStyle && plateNumber) {
       console.log("Updating text geometry with new plateStyle:", plateStyle);
-      
+  
       // Load the font and create new geometry
       const fontLoader = new FontLoader();
       fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
@@ -173,17 +200,23 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
         const textGeometry = new TextGeometry(plateNumber, {
           font,
           size: 3, // Use font size from plateStyle
-          height: plateStyle.material.thickness==null?0:plateStyle.material.thickness/10, // This controls the extrusion depth (Z-axis thickness)          curveSegments: 12,
+          height: plateStyle.material.thickness == null ? 0 : plateStyle.material.thickness / 10, // This controls the extrusion depth (Z-axis thickness)
+          curveSegments: 12,
         });
   
         // Log to check geometry update
-        console.log("New text geometry created with size:", 3, "and height:", plateStyle.material.thickness==null?0:plateStyle.material.thickness/10);
+        console.log(
+          "New text geometry created with size:",
+          3,
+          "and height:",
+          plateStyle.material.thickness == null ? 0 : plateStyle.material.thickness / 10
+        );
   
         // Dispose old geometry before setting the new one
         if (textMesh.geometry) {
           textMesh.geometry.dispose();
         }
-        
+  
         // Set new geometry
         textMesh.geometry = textGeometry;
   
@@ -199,14 +232,15 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
           textMesh.position.set(
             -textWidth / 2,
             -1.1, // Adjust the vertical position
-            0.3   // Adjust depth (Z axis) if needed
+            0.3 // Adjust depth (Z axis) if needed
           );
         } else {
           console.warn("Bounding box calculation failed for text geometry.");
         }
       });
     }
-  }, [plateNumber, plateStyle, textMesh]); // Dependencies for when these change
+  }, [scene, size, plateNumber, plateStyle, textMesh,border]); // Dependencies for when these change
+  
     
   
 

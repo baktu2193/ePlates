@@ -1,12 +1,12 @@
 'use client'
 
-import { SIZING, Start, STYLE } from "@/components/PlateBuilder/Components";
+import { BORDER, SIZING, Start, STYLE } from "@/components/PlateBuilder/Components";
 import ThreeDRectangle from "@/components/PlateBuilder/Plate";
 import PlateSummary from "@/components/PlateBuilder/PlateSummary";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
-import {  Plate, PlateSize, plateStyles } from "../../../PlateStyles";
+import { useEffect, useState } from "react";
+import {  Border, Plate, PlateSize, plateStyles } from "../../../PlateStyles";
 
 export default function PlateBuilder() {
   const [plateNumber, setPlateNumber] = useState("MD 22");
@@ -32,6 +32,37 @@ export default function PlateBuilder() {
     }
     return { key: 'standard', width: 18, height: 18 }; // Default fallback
   });
+
+
+  // Border states - Set dynamically based on frontStyle and rearStyle
+const [frontBorder, setFrontBorder] = useState<Border>(() => ({
+  name: frontStyle.border?.name || 'Standard Border',  // Default based on frontStyle
+  type: frontStyle.border?.type || 'solid',  // Default based on frontStyle
+  material: frontStyle.border?.material || { type: 'metal', thickness: 2 },  // Default material
+}));
+
+const [rearBorder, setRearBorder] = useState<Border>(() => ({
+  name: rearStyle.border?.name || 'Standard Border',  // Default based on rearStyle
+  type: rearStyle.border?.type || 'solid',  // Default based on rearStyle
+  material: rearStyle.border?.material || { type: 'metal', thickness: 2 },  // Default material
+}));
+
+// Update border states if frontStyle or rearStyle changes
+useEffect(() => {
+  setFrontBorder({
+    name: frontStyle.border?.name || 'Standard Border',
+    type: frontStyle.border?.type || 'solid',
+    material: frontStyle.border?.material || { type: 'metal', thickness: 2 },
+  });
+}, [frontStyle]);  // Runs when frontStyle changes
+
+useEffect(() => {
+  setRearBorder({
+    name: rearStyle.border?.name || 'Standard Border',
+    type: rearStyle.border?.type || 'solid',
+    material: rearStyle.border?.material || { type: 'metal', thickness: 2 },
+  });
+}, [rearStyle]);  // Runs when rearStyle changes
   
   
   
@@ -108,8 +139,8 @@ export default function PlateBuilder() {
               <TabsContent value="sizing" className="col-span-2 h-[390px]">
                 <SIZING rearStyle={rearStyle} frontStyle={frontStyle} rearSize={rearSize} frontSize={frontSize} setRearSize={setRearSize} setFrontSize={setFrontSize} />
               </TabsContent>
-              <TabsContent value="finish" className="col-span-2 h-[390px]">
-                <STYLE rearStyle={rearStyle} frontStyle={frontStyle} setRearStyle={setRearStyle} setFrontStyle={setFrontStyle} />
+              <TabsContent value="border" className="col-span-2 h-[390px]">
+                <BORDER rearStyle={rearStyle} frontStyle={frontStyle} setFrontBorder={setFrontBorder} setRearBorder={setRearBorder} rearBorder={rearBorder} frontBorder={frontBorder} />
               </TabsContent>
 
               {/* Plate Displayer */}
@@ -123,9 +154,9 @@ export default function PlateBuilder() {
                 </div>
                 {
                   isRear?
-                  <ThreeDRectangle isRear={true} size={rearSize} plateNumber={plateNumber} plateStyle={rearStyle} />
+                  <ThreeDRectangle border={rearBorder} isRear={true} size={rearSize} plateNumber={plateNumber} plateStyle={rearStyle} />
                   :
-                  <ThreeDRectangle isRear={false} size={frontSize} plateNumber={plateNumber} plateStyle={frontStyle}  />
+                  <ThreeDRectangle border={frontBorder} isRear={false} size={frontSize} plateNumber={plateNumber} plateStyle={frontStyle}  />
                 }
               </div>
             </div>
