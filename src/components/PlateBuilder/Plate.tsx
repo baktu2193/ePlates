@@ -25,6 +25,44 @@ const createRoundedRectShape = (width: number, height: number, radius: number) =
   return shape;
 };
 
+// Create the hollow border shape
+const createHollowBorderShape = (width: number, height: number, radius: number, borderThickness: number) => {
+  const shape = new THREE.Shape();
+  const x = -width / 2;
+  const y = -height / 2;
+
+  // Outer border shape
+  shape.moveTo(x + radius, y);
+  shape.lineTo(x + width - radius, y);
+  shape.quadraticCurveTo(x + width, y, x + width, y + radius);
+  shape.lineTo(x + width, y + height - radius);
+  shape.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  shape.lineTo(x + radius, y + height);
+  shape.quadraticCurveTo(x, y + height, x, y + height - radius);
+  shape.lineTo(x, y + radius);
+  shape.quadraticCurveTo(x, y, x + radius, y);
+
+  // Inner cut-out shape (matches plate size exactly)
+  const innerShape = new THREE.Shape();
+  const innerX = x + borderThickness; // Offset for the border
+  const innerY = y + borderThickness;
+
+  innerShape.moveTo(innerX + radius, innerY);
+  innerShape.lineTo(innerX + width - 2 * borderThickness - radius, innerY);
+  innerShape.quadraticCurveTo(innerX + width - 2 * borderThickness, innerY, innerX + width - 2 * borderThickness, innerY + radius);
+  innerShape.lineTo(innerX + width - 2 * borderThickness, innerY + height - 2 * borderThickness - radius);
+  innerShape.quadraticCurveTo(innerX + width - 2 * borderThickness, innerY + height - 2 * borderThickness, innerX + width - 2 * borderThickness - radius, innerY + height - 2 * borderThickness);
+  innerShape.lineTo(innerX + radius, innerY + height - 2 * borderThickness);
+  innerShape.quadraticCurveTo(innerX, innerY + height - 2 * borderThickness, innerX, innerY + height - 2 * borderThickness - radius);
+  innerShape.lineTo(innerX, innerY + radius);
+  innerShape.quadraticCurveTo(innerX, innerY, innerX + radius, innerY);
+
+  // Subtract inner shape to create hollow effect
+  shape.holes.push(innerShape);
+
+  return shape;
+};
+
 interface PlateProps{
   plateStyle: Plate;
   plateNumber:string,
@@ -182,6 +220,23 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
         // Scale down the plate for easier viewing
         const scaleFactor = 0.7; // Adjust this factor as needed
         plateMesh.scale.set(scaleFactor, scaleFactor, scaleFactor);
+
+        // Create the border geometry
+        const borderGeometry = new THREE.ExtrudeGeometry(createHollowBorderShape(size.width, size.height, 0.5, border.material.thickness/10), {
+          depth: 0.2, // Depth of the border
+          bevelEnabled: false,
+        });
+
+        // Apply material to the border
+        const borderMaterial = new THREE.MeshBasicMaterial({
+          color: 0x000000, // Border color (black)
+          side: THREE.DoubleSide, // Render both sides of the border
+        });
+
+        // Create the border mesh and add to scene
+        const borderMesh = new THREE.Mesh(borderGeometry, borderMaterial);
+        borderMesh.position.set(0, 0, 0.1); // Position it slightly above the plate
+        scene.add(borderMesh);
       }
     }
   
