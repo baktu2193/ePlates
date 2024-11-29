@@ -119,10 +119,15 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
 
     const plateGeometry = new THREE.ExtrudeGeometry(roundedRectShape, extrudeSettings);
     const plateMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xffffff, // Slightly off-white color
-      roughness: 0,
-      metalness: 0,
+      color: 0xf1f0e6, // Slightly off-white color for a soft, creamy appearance
+      roughness: 0.9,   // Less roughness for a smoother, glossier look (still matte)
+      metalness: 0.1,   // A little metallic sheen for a plastic-like finish
+      emissive: 0xffffff, // Matching the base color for a subtle glow
+      emissiveIntensity: 0.5, // Reduce emissive intensity for a more natural look
+      clearcoat: 0.8,    // A thin clearcoat for an extra glossy finish (optional)
+      clearcoatRoughness: 0.1, // Slight roughness on the clearcoat for realistic shine
     });
+    
     const plate = new THREE.Mesh(plateGeometry, plateMaterial);
     plate.rotation.y = 0; // Reset any previous Y-axis rotation
     plate.rotation.x = 0; // Ensure no X-axis rotation    
@@ -226,18 +231,13 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
         const scaleFactor = 0.7; // Adjust this factor as needed
         plateMesh.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
-        // luster and shine
-        plateMesh.material.roughness=1;
-        plateMesh.material.emissive=0x000000;
-        plateMesh.material.metalness=0; 
-        plateMesh.material.color.set(0xffffff);  // Set the color to pure white
-  
         // Update the plate color based on isRear state
         if (isRear) {
           plateMesh.material.color.set(0xffcd29); // Set to yellow if isRear is true
         } else {
-          plateMesh.material.color.set(0xffffff); // Set to white otherwise
+          plateMesh.material.color.set(0xf8f4e1); // Lighter milk color for the front
         }
+
   
         // Remove the existing border mesh if it exists
         const existingBorderMesh = scene.children.find(
@@ -306,7 +306,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
           font,
           size: 3, // Use font size from plateStyle
           height: plateStyle.material.thickness == null ? 0 : plateStyle.material.thickness / 10, // This controls the extrusion depth (Z-axis thickness)
-          curveSegments: 256,
+          curveSegments: 128,
         });
     
         // Create the thin black layer geometry (a very thin extrusion)
@@ -314,7 +314,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
           font,
           size: 3, // Same size as the base text
           height: 0.1, // Very thin layer
-          curveSegments: 256,
+          curveSegments: 128,
         });
     
         // Log to check geometry update

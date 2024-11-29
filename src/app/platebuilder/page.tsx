@@ -149,8 +149,8 @@ useEffect(() => {
                 style={{ height: "300px", width: "100%" }}
               >
                 <div className="  grid grid-cols-2 gap-2 py-2 text-black" >
-                    <Button className={isRear?" bg-transparent":""} onClick={()=>setIsRear(false)} >FRONT PLATE</Button>
-                    <Button className={!isRear?" bg-transparent":""} onClick={()=>setIsRear(true)}>REAR PLATE</Button>
+                    {iWantFrontPlate&&<Button className={isRear?" bg-transparent":""} onClick={()=>setIsRear(false)} >FRONT PLATE</Button>}
+                    {iWantBackPlate&&<Button className={!isRear?" bg-transparent":""} onClick={()=>setIsRear(true)}>REAR PLATE</Button>}
                 </div>
                 {
                   isRear?
