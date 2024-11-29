@@ -123,7 +123,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
     scene.add(plate);
 
     const fontLoader = new FontLoader();
-fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
+    fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
   // Use plate style properties (thickness, height, and fontSize) dynamically
   const textGeometry = new TextGeometry(plateNumber, {
     font,
@@ -135,8 +135,8 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
   // Use material settings for text
   const textMaterial = new THREE.MeshStandardMaterial({
     color: 0x000000, // Color for the text
-    roughness: 0.5, // Smoothness
-    metalness: 0.5, // Slight reflection
+    roughness: 1, // Smoothness
+    metalness: 0, // Slight reflection
   });
 
   // Create the text mesh with the geometry and material
@@ -172,6 +172,7 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
     const animate = () => {
       requestAnimationFrame(animate);
       controls.update();
+      renderer.setClearColor(0xffffff); // White background color
       renderer.render(scene, camera);
     };
     animate();
@@ -198,11 +199,11 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
 
   useEffect(() => {
     if (scene && size) {
-      // Update plate geometry
+      // Create the plate geometry first
       const roundedRectShape = createRoundedRectShape(size.width, size.height, 0.5);
       const extrudeSettings = {
         depth: 0.2,
-        bevelEnabled: false,  // Optional: Set to true if you want bevels
+        bevelEnabled: false, // Optional: Set to true if you want bevels
         curveSegments: 64,
       };
   
@@ -213,36 +214,77 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
       if (plateMesh) {
         plateMesh.geometry.dispose(); // Dispose of the old geometry
         plateMesh.geometry = plateGeometry; // Set the new geometry
-
-        // Add border based on the `border` prop
-      
   
-        // Scale down the plate for easier viewing
+        // Scale the plate for easier viewing (after updating geometry)
         const scaleFactor = 0.7; // Adjust this factor as needed
         plateMesh.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
-        // Create the border geometry
-        const borderGeometry = new THREE.ExtrudeGeometry(createHollowBorderShape(size.width, size.height, 0.5, border.material.thickness/10), {
-          depth: 0.2, // Depth of the border
-          bevelEnabled: false,
-        });
-
+        // luster and shine
+        plateMesh.material.roughness=1;
+        plateMesh.material.emissive=0x000000;
+        plateMesh.material.metalness=0; 
+        plateMesh.material.color.set(0xffffff);  // Set the color to pure white
+  
+        // Update the plate color based on isRear state
+        if (isRear) {
+          plateMesh.material.color.set(0xffcd29); // Set to yellow if isRear is true
+        } else {
+          plateMesh.material.color.set(0xffffff); // Set to white otherwise
+        }
+  
+        // Remove the existing border mesh if it exists
+        const existingBorderMesh = scene.children.find(
+          (child) => child.name === 'borderMesh'
+        );
+        if (existingBorderMesh) {
+          scene.remove(existingBorderMesh); // Remove the old border from the scene
+          existingBorderMesh.geometry.dispose(); // Dispose of old geometry
+          existingBorderMesh.material.dispose(); // Dispose of old material
+        }
+  
+        // Create the border geometry with the scaled size
+        const borderGeometry = new THREE.ExtrudeGeometry(
+          createHollowBorderShape(size.width * scaleFactor, size.height * scaleFactor, 0.5, border.material.thickness / 10), {
+            depth: 0.3, // Depth of the border
+            bevelEnabled: false,
+          }
+        );
+  
         // Apply material to the border
         const borderMaterial = new THREE.MeshBasicMaterial({
           color: 0x000000, // Border color (black)
           side: THREE.DoubleSide, // Render both sides of the border
         });
-
-        // Create the border mesh and add to scene
+  
+        // Create the border mesh and add it to the scene
         const borderMesh = new THREE.Mesh(borderGeometry, borderMaterial);
-        borderMesh.position.set(0, 0, 0.1); // Position it slightly above the plate
+        borderMesh.position.set(0, 0, 0.15); // Position it slightly above the plate
+        borderMesh.name = 'borderMesh'; // Set a name to easily find it later
+  
+        // Add the new border mesh to the scene
         scene.add(borderMesh);
       }
     }
   
     if (textMesh && plateStyle && plateNumber) {
       console.log("Updating text geometry with new plateStyle:", plateStyle);
-  
+    
+      // Dispose of the old text mesh if it exists
+      if (textMesh.geometry) {
+        textMesh.geometry.dispose();
+      }
+      if (textMesh.material) {
+        textMesh.material.dispose();
+      }
+    
+      // Dispose of the old black layer mesh if it exists
+      const existingBlackLayer = scene.children.find(child => child.name === "blackLayerMesh");
+      if (existingBlackLayer) {
+        existingBlackLayer.geometry.dispose();
+        existingBlackLayer.material.dispose();
+        scene.remove(existingBlackLayer); // Remove it from the scene
+      }
+    
       // Load the font and create new geometry
       const fontLoader = new FontLoader();
       fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
@@ -251,14 +293,23 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
           console.error("Font loading failed");
           return;
         }
-  
+    
+        // Create the base colored text geometry
         const textGeometry = new TextGeometry(plateNumber, {
           font,
           size: 3, // Use font size from plateStyle
           height: plateStyle.material.thickness == null ? 0 : plateStyle.material.thickness / 10, // This controls the extrusion depth (Z-axis thickness)
           curveSegments: 12,
         });
-  
+    
+        // Create the thin black layer geometry (a very thin extrusion)
+        const blackLayerGeometry = new TextGeometry(plateNumber, {
+          font,
+          size: 3, // Same size as the base text
+          height: 0.1, // Very thin layer
+          curveSegments: 12,
+        });
+    
         // Log to check geometry update
         console.log(
           "New text geometry created with size:",
@@ -266,37 +317,86 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
           "and height:",
           plateStyle.material.thickness == null ? 0 : plateStyle.material.thickness / 10
         );
-  
-        // Dispose old geometry before setting the new one
-        if (textMesh.geometry) {
-          textMesh.geometry.dispose();
+    
+        // Check if the plate style name contains "GEL"
+        const isGelPlate = /GEL/i.test(plateStyle.name); // This checks if "GEL" is in plateStyle.name, case-insensitive
+    
+        // If the plateStyle name contains "GEL", apply the glowing effect
+        if (isGelPlate) {
+          // Apply a glowing material effect for "GEL" plate
+          const gelMaterial = new THREE.MeshBasicMaterial({
+            color: 0x00ff00, // Green color to represent "GEL"
+            emissive: 0x00ff00, // Makes it glow
+            emissiveIntensity: 1.5, // Glow intensity
+            side: THREE.DoubleSide,
+          });
+    
+          // Create the text mesh with the colored material
+          textMesh.material = gelMaterial;
+        } else {
+          // Default color for the text
+          textMesh.material = new THREE.MeshBasicMaterial({
+            color: 0x000000, // White color for default text
+            side: THREE.DoubleSide,
+          });
         }
-  
-        // Set new geometry
+    
+        // Set the new geometry for the text
         textMesh.geometry = textGeometry;
-  
+    
+        // Create the black top layer mesh for the text
+        const blackLayerMesh = new THREE.Mesh(blackLayerGeometry, new THREE.MeshBasicMaterial({
+          color: 0x000000, // Black color for the top layer
+          side: THREE.DoubleSide,
+        }));
+    
+        // Position the black top layer exactly on top of the main text
+        const textDepth = plateStyle.material.thickness == null ? 0 : plateStyle.material.thickness / 10;
+        blackLayerMesh.position.set(0, 0, textDepth + 0.1); // Slight offset on Z-axis, adjusting for the thickness
+    
+        // Add the black top layer mesh to the scene and give it a name for easy reference
+        blackLayerMesh.name = "blackLayerMesh";
+        scene.add(blackLayerMesh);
+    
         // Compute bounding box and check if valid
         textGeometry.computeBoundingBox();
         if (textGeometry.boundingBox) {
           const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x || 0;
           const textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y || 0;
-  
+    
           console.log("Updated text width:", textWidth, "text height:", textHeight);
-  
-          // Update the position of the mesh based on bounding box
+    
+          // Ensure the text fits inside the plate
+          const plateWidth = size.width * 0.7; // Adjust for plate scale
+          const plateHeight = size.height * 0.7;
+    
+          // Scale down the text if it's too wide for the plate
+          if (textWidth > plateWidth) {
+            const scaleFactor = plateWidth / textWidth;
+            textMesh.scale.set(scaleFactor, scaleFactor, 1);
+            blackLayerMesh.scale.set(scaleFactor, scaleFactor, 1); // Scale the black layer as well
+          }
+    
+          // Center the text on the plate
           textMesh.position.set(
             -textWidth / 2,
             -1.1, // Adjust the vertical position
-            0.3 // Adjust depth (Z axis) if needed
+            0.15 // Adjust depth (Z axis) if needed
+          );
+    
+          blackLayerMesh.position.set(
+            -textWidth / 2,
+            -1.1, // Adjust the vertical position
+            textDepth + 0.1 // Slightly above the main text (but very thin layer)
           );
         } else {
           console.warn("Bounding box calculation failed for text geometry.");
         }
       });
     }
-  }, [scene, size, plateNumber, plateStyle, textMesh,border]); // Dependencies for when these change
+        
+  }, [scene, size, plateNumber, plateStyle, textMesh, border, isRear]); // Add isRear to dependency array
   
-    
   
 
   return <div ref={mountRef} style={{ backgroundColor:'white',width: "100%", height: "100%" }} />;

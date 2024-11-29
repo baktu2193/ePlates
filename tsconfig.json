@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "noEmit": true,
@@ -18,12 +22,23 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": [
+        "./src/*"
+      ],
       "three/examples/jsm/controls/OrbitControls": [
-      "/node_modules/three/examples/jsm/controls/OrbitControls.js"
-    ]
-    }
+        "/node_modules/three/examples/jsm/controls/OrbitControls.js"
+      ]
+    },
+    "strict": false
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/types/**/*.ts", ],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
