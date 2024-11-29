@@ -67,11 +67,11 @@ interface PlateProps{
   plateStyle: Plate;
   plateNumber:string,
   isRear:boolean,
-  size:PlateSize,
+  size?:PlateSize,
   border:Border,
 }
 
-const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlateProps) => {
+const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size={key:"11x8",width:20,height:5},border }: PlateProps) => {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const [scene, setScene] = useState<THREE.Scene | null>(null);
   const [textMesh, setTextMesh] = useState<THREE.Mesh | null>(null);
@@ -165,7 +165,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
   textMesh.position.set(
     -textWidth / 2, // Center horizontally
     -textHeight / 2, // Center vertically based on text height
-    0.3             // Adjust the depth to place in front of the plate
+    0.1             // Adjust the depth to place in front of the plate
   );
 
   // Add textMesh to the scene
@@ -228,7 +228,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
         plateMesh.geometry = plateGeometry; // Set the new geometry
   
         // Scale the plate for easier viewing (after updating geometry)
-        const scaleFactor = 0.7; // Adjust this factor as needed
+        const scaleFactor = 1; // Adjust this factor as needed
         plateMesh.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
         // Update the plate color based on isRear state
@@ -251,7 +251,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
   
         // Create the border geometry with the scaled size
         const borderGeometry = new THREE.ExtrudeGeometry(
-          createHollowBorderShape(size.width * scaleFactor, size.height * scaleFactor, 0.5, border.material.thickness / 10), {
+          createHollowBorderShape(size.width * scaleFactor, size.height * scaleFactor, 0.5, border.material.thickness / 20), {
             depth: 0.3, // Depth of the border
             bevelEnabled: false,
           }
@@ -260,7 +260,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
         // Apply material to the border
         const borderMaterial = new THREE.MeshBasicMaterial({
           color: 0x000000, // Border color (black)
-          side: THREE.DoubleSide, // Render both sides of the border
+           // Render both sides of the border
         });
   
         // Create the border mesh and add it to the scene
@@ -326,7 +326,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
             color: 0x00ff00, // Green color to represent "GEL"
             emissive: 0x00ff00, // Makes it glow
             emissiveIntensity: 1.5, // Glow intensity
-            side: THREE.DoubleSide,
+            
           });
     
           // Create the text mesh with the colored material
@@ -335,7 +335,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
           // Default color for the text
           textMesh.material = new THREE.MeshBasicMaterial({
             color: 0x000000, // Black color for default text
-            side: THREE.DoubleSide,
+            
           });
         }
     
@@ -345,7 +345,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
         // Create the black top layer mesh for the text
         const blackLayerMesh = new THREE.Mesh(blackLayerGeometry, new THREE.MeshBasicMaterial({
           color: 0x000000, // Black color for the top layer
-          side: THREE.DoubleSide,
+          
         }));
     
         // Position the black top layer exactly on top of the main text
@@ -390,8 +390,8 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
           const offsetY = -textHeight / 2; // Offset to center vertically
         
           // Ensure the text and the black layer are both properly centered and aligned
-          textMesh.position.set(offsetX, offsetY, 0.3); // Adjusted for centering
-          blackLayerMesh.position.set(offsetX, offsetY, 0.3); // Same position for the black layer
+          textMesh.position.set(offsetX, offsetY, 0.1); // Adjusted for centering
+          blackLayerMesh.position.set(offsetX, offsetY, (plateStyle.material.thickness/10)+0.15); // Same position for the black layer
         
         } else {
           console.warn("Bounding box calculation failed for text geometry.");

@@ -154,9 +154,9 @@ useEffect(() => {
                 </div>
                 {
                   isRear?
-                  <ThreeDRectangle border={rearBorder} isRear={true} size={rearSize} plateNumber={plateNumber} plateStyle={rearStyle} />
+                  <ThreeDRectangle border={rearBorder} isRear={true} plateNumber={plateNumber} plateStyle={rearStyle} />
                   :
-                  <ThreeDRectangle border={frontBorder} isRear={false} size={frontSize} plateNumber={plateNumber} plateStyle={frontStyle}  />
+                  <ThreeDRectangle border={frontBorder} isRear={false} plateNumber={plateNumber} plateStyle={frontStyle}  />
                 }
               </div>
             </div>
