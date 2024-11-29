@@ -32,6 +32,7 @@ export function Start({
                 className="bg-white" 
                 value={plateNumber} 
                 onChange={(e) => setPlateNumber(e.target.value)} 
+                maxLength={7}
             />
             <label className="border bg-white/95 px-2 py-1 rounded-sm">
                 Formatted as <span className="font-bold">{plateNumber}</span>

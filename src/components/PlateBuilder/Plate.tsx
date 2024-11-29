@@ -139,7 +139,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
   // Use plate style properties (thickness, height, and fontSize) dynamically
   const textGeometry = new TextGeometry(plateNumber, {
     font,
-    size: 3, // This controls the height of the letters (Y-axis)
+    size: 1.9, // This controls the height of the letters (Y-axis)
     height: plateStyle.material.thickness==null?0:plateStyle.material.thickness/10, // This controls the extrusion depth (Z-axis thickness)
     curveSegments: 256, // Controls curve smoothness
   });
@@ -295,7 +295,6 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
       // Load the font and create new geometry
       const fontLoader = new FontLoader();
       fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
-        // Ensure that the font is loaded before proceeding
         if (!font) {
           console.error("Font loading failed");
           return;
@@ -304,26 +303,18 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
         // Create the base colored text geometry
         const textGeometry = new TextGeometry(plateNumber, {
           font,
-          size: 3, // Use font size from plateStyle
-          height: plateStyle.material.thickness == null ? 0 : plateStyle.material.thickness / 10, // This controls the extrusion depth (Z-axis thickness)
+          size: 1.9, // Use font size from plateStyle
+          height: plateStyle.material.thickness == null ? 0 : plateStyle.material.thickness / 10,
           curveSegments: 128,
         });
     
-        // Create the thin black layer geometry (a very thin extrusion)
+        // Create the thin black layer geometry
         const blackLayerGeometry = new TextGeometry(plateNumber, {
           font,
-          size: 3, // Same size as the base text
+          size: 1.9, // Same size as the base text
           height: 0.1, // Very thin layer
           curveSegments: 128,
         });
-    
-        // Log to check geometry update
-        console.log(
-          "New text geometry created with size:",
-          3,
-          "and height:",
-          plateStyle.material.thickness == null ? 0 : plateStyle.material.thickness / 10
-        );
     
         // Check if the plate style name contains "GEL"
         const isGelPlate = /GEL/i.test(plateStyle.name); // This checks if "GEL" is in plateStyle.name, case-insensitive
@@ -343,7 +334,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
         } else {
           // Default color for the text
           textMesh.material = new THREE.MeshBasicMaterial({
-            color: 0x000000, // White color for default text
+            color: 0x000000, // Black color for default text
             side: THREE.DoubleSide,
           });
         }
@@ -359,48 +350,56 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
     
         // Position the black top layer exactly on top of the main text
         const textDepth = plateStyle.material.thickness == null ? 0 : plateStyle.material.thickness / 10;
-        blackLayerMesh.position.set(0, 0, textDepth + 0.1); // Slight offset on Z-axis, adjusting for the thickness
+        blackLayerMesh.position.set(0, 0, textDepth + 0.1); // Slight offset on Z-axis
     
         // Add the black top layer mesh to the scene and give it a name for easy reference
         blackLayerMesh.name = "blackLayerMesh";
         scene.add(blackLayerMesh);
     
-        // Compute bounding box and check if valid
-        textGeometry.computeBoundingBox();
+        // Compute the bounding box of the text geometry to center the text properly
+        textGeometry.computeBoundingBox(); // Get bounding box to determine size
+    
         if (textGeometry.boundingBox) {
-          const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x || 0;
-          const textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y || 0;
-    
+          // Calculate the width and height of the text geometry
+          let textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x || 0;
+          let textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y || 0;
+        
           console.log("Updated text width:", textWidth, "text height:", textHeight);
-    
+        
           // Ensure the text fits inside the plate
           const plateWidth = size.width * 0.7; // Adjust for plate scale
           const plateHeight = size.height * 0.7;
-    
+        
           // Scale down the text if it's too wide for the plate
           if (textWidth > plateWidth) {
             const scaleFactor = plateWidth / textWidth;
             textMesh.scale.set(scaleFactor, scaleFactor, 1);
             blackLayerMesh.scale.set(scaleFactor, scaleFactor, 1); // Scale the black layer as well
+        
+            // Recompute the bounding box after scaling
+            textGeometry.computeBoundingBox(); 
+            if (textGeometry.boundingBox) {
+              textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x || 0;
+              textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y || 0;
+            }
           }
-    
-          // Center the text on the plate
-          textMesh.position.set(
-            -textWidth / 2,
-            -1.1, // Adjust the vertical position
-            0.15 // Adjust depth (Z axis) if needed
-          );
-    
-          blackLayerMesh.position.set(
-            -textWidth / 2,
-            -1.1, // Adjust the vertical position
-            textDepth + 0.1 // Slightly above the main text (but very thin layer)
-          );
+        
+          // Adjust the position of the text and black layer to keep them centered
+          // Updated centering logic after scaling
+          const offsetX = -textWidth / 2; // Offset to center horizontally
+          const offsetY = -textHeight / 2; // Offset to center vertically
+        
+          // Ensure the text and the black layer are both properly centered and aligned
+          textMesh.position.set(offsetX, offsetY, 0.3); // Adjusted for centering
+          blackLayerMesh.position.set(offsetX, offsetY, 0.3); // Same position for the black layer
+        
         } else {
           console.warn("Bounding box calculation failed for text geometry.");
         }
+                
       });
     }
+    
         
   }, [scene, size, plateNumber, plateStyle, textMesh, border, isRear]); // Add isRear to dependency array
   
