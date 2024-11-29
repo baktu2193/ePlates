@@ -90,10 +90,17 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
     );
     camera.position.set(0, 0, 10); // Camera positioned to view the plate and text
 
-    const renderer = new THREE.WebGLRenderer();
+    const renderer = new THREE.WebGLRenderer({ antialias: true });  // Enable antialiasing
     renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
     renderer.setClearColor(0x202020); // Dark background color
+    
+    // Optional: Enable performance optimizations
+    renderer.shadowMap.enabled = true;  // Enable shadows if needed
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Use soft shadows for smoother appearance
+    
+    // Add the renderer's DOM element to the mount element
     mountRef.current.appendChild(renderer.domElement);
+    
 
     // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.8); // Softer light
@@ -129,7 +136,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
     font,
     size: 3, // This controls the height of the letters (Y-axis)
     height: plateStyle.material.thickness==null?0:plateStyle.material.thickness/10, // This controls the extrusion depth (Z-axis thickness)
-    curveSegments: 12, // Controls curve smoothness
+    curveSegments: 256, // Controls curve smoothness
   });
 
   // Use material settings for text
@@ -204,7 +211,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
       const extrudeSettings = {
         depth: 0.2,
         bevelEnabled: false, // Optional: Set to true if you want bevels
-        curveSegments: 64,
+        curveSegments: 256,
       };
   
       const plateGeometry = new THREE.ExtrudeGeometry(roundedRectShape, extrudeSettings);
@@ -299,7 +306,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
           font,
           size: 3, // Use font size from plateStyle
           height: plateStyle.material.thickness == null ? 0 : plateStyle.material.thickness / 10, // This controls the extrusion depth (Z-axis thickness)
-          curveSegments: 12,
+          curveSegments: 256,
         });
     
         // Create the thin black layer geometry (a very thin extrusion)
@@ -307,7 +314,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
           font,
           size: 3, // Same size as the base text
           height: 0.1, // Very thin layer
-          curveSegments: 12,
+          curveSegments: 256,
         });
     
         // Log to check geometry update
@@ -396,7 +403,6 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
     }
         
   }, [scene, size, plateNumber, plateStyle, textMesh, border, isRear]); // Add isRear to dependency array
-  
   
 
   return <div ref={mountRef} style={{ backgroundColor:'white',width: "100%", height: "100%" }} />;
