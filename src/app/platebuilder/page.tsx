@@ -18,6 +18,10 @@ export default function PlateBuilder() {
   const [frontPrice, setFrontPrice] = useState(23.99);
   const [rearPrice, setRearPrice] = useState(23.99);
 
+  useEffect(()=>{
+    plateNumber
+  },[plateNumber])
+
   const [frontSize, setFrontSize] = useState<PlateSize>(() => {
     const sizes = plateStyles[0]?.frontPlate?.sizes as PlateSize[] | undefined;
     if (sizes && sizes.length > 0) {
