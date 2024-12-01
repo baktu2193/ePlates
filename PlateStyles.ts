@@ -74,7 +74,7 @@ const plateStyles: Plate[] = [
   {
     letters: 7,
     name: '3D Gel',
-    material: { type: 'Gel', thickness: null },
+    material: { type: 'Gel', thickness: 1 },
     frontPlate: {
       sizes: [
         { key: 'standard', width: 18, height: 18 },

@@ -38,31 +38,31 @@ export default function PlateBuilder() {
 const [frontBorder, setFrontBorder] = useState<Border>(() => ({
   name: frontStyle.border?.name || 'Standard Border',  // Default based on frontStyle
   type: frontStyle.border?.type || 'solid',  // Default based on frontStyle
-  material: frontStyle.border?.material || { type: 'metal', thickness: 2 },  // Default material
+  material: frontStyle.border?.material || { type: 'metal', thickness: 0 },  // Default material
 }));
 
 const [rearBorder, setRearBorder] = useState<Border>(() => ({
   name: rearStyle.border?.name || 'Standard Border',  // Default based on rearStyle
   type: rearStyle.border?.type || 'solid',  // Default based on rearStyle
-  material: rearStyle.border?.material || { type: 'metal', thickness: 2 },  // Default material
+  material: rearStyle.border?.material || { type: 'metal', thickness: 0 },  // Default material
 }));
 
 // Update border states if frontStyle or rearStyle changes
-useEffect(() => {
-  setFrontBorder({
-    name: frontStyle.border?.name || 'Standard Border',
-    type: frontStyle.border?.type || 'solid',
-    material: frontStyle.border?.material || { type: 'metal', thickness: 2 },
-  });
-}, [frontStyle]);  // Runs when frontStyle changes
+// useEffect(() => {
+//   setFrontBorder({
+//     name: frontStyle.border?.name || 'Standard Border',
+//     type: frontStyle.border?.type || 'solid',
+//     material: frontStyle.border?.material || { type: 'metal', thickness: 2 },
+//   });
+// }, [frontStyle]);  // Runs when frontStyle changes
 
-useEffect(() => {
-  setRearBorder({
-    name: rearStyle.border?.name || 'Standard Border',
-    type: rearStyle.border?.type || 'solid',
-    material: rearStyle.border?.material || { type: 'metal', thickness: 2 },
-  });
-}, [rearStyle]);  // Runs when rearStyle changes
+// useEffect(() => {
+//   setRearBorder({
+//     name: rearStyle.border?.name || 'Standard Border',
+//     type: rearStyle.border?.type || 'solid',
+//     material: rearStyle.border?.material || { type: 'metal', thickness: 2 },
+//   });
+// }, [rearStyle]);  // Runs when rearStyle changes
   
   
   
