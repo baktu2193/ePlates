@@ -354,91 +354,102 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size={key:"11x8",width
     
       // Load the font and create new geometry
       const fontLoader = new FontLoader();
-      fontLoader.load("/fonts/Rubik_SemiBold_Regular.json", (font) => {
-        if (!font) {
-          console.error("Font loading failed");
-          return;
-        }
-    
-        // Create the base colored text geometry
-        const textGeometry = new TextGeometry(plateNumber, {
-          font,
-          size: 2.8,
-          height: plateStyle.material.thickness ? plateStyle.material.thickness / 20 : 0,
-          curveSegments: 128,
-        });
-    
-        // Create the thin black layer geometry
-        const blackLayerGeometry = new TextGeometry(plateNumber, {
-          font,
-          size: 2.8,
-          height: 0.1, // Very thin layer
-          curveSegments: 128,
-        });
-    
-        // Check if the plate style is GEL
-        const isGelPlate = /GEL/i.test(plateStyle.name);
-    
-        // Assign material for GEL or default plates
-        const textMaterial = isGelPlate
-          ? new THREE.MeshBasicMaterial({
-              color: 0x00ff00, // Green color
-              emissive: 0x00ff00, // Glow effect
-              emissiveIntensity: 1.5,
-            })
-          : new THREE.MeshBasicMaterial({ color: 0x000000 });
-    
-        textMesh.material = textMaterial; // Assign the material to the mesh
-        textMesh.geometry = textGeometry; // Assign the geometry to the mesh
-    
-        // Handle Acrylic plates with a black layer
-        const isAcrylicPlate = /ACRYLIC/i.test(plateStyle.name);
-        let blackLayerMesh: THREE.Mesh | null = null;
-    
-        if (isAcrylicPlate) {
-          blackLayerMesh = new THREE.Mesh(blackLayerGeometry, new THREE.MeshBasicMaterial({ color: 0x000000 }));
-          blackLayerMesh.position.set(0, 0, plateStyle.material.thickness ? plateStyle.material.thickness / 20 + 0.1 : 0.1);
-          blackLayerMesh.name = "blackLayerMesh";
-          scene.add(blackLayerMesh); // Add black layer to the scene
-        }
-    
-        // Centering and scaling logic
-        textGeometry.computeBoundingBox();
-        if (textGeometry.boundingBox) {
-          let textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x || 0;
-          let textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y || 0;
-    
-          console.log("Text dimensions:", textWidth, textHeight);
-    
-          // Ensure text fits within the plate
-          const plateWidth = size.width * 0.7;
-          const plateHeight = size.height * 0.7;
-    
-          if (textWidth > plateWidth) {
-            const scaleFactor = plateWidth / textWidth;
-            textMesh.scale.set(scaleFactor, scaleFactor, 1);
-            if (blackLayerMesh) {
-              blackLayerMesh.scale.set(scaleFactor, scaleFactor, 1);
-            }
-    
-            // Recompute bounding box after scaling
-            textGeometry.computeBoundingBox();
-            textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x || 0;
-            textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y || 0;
-          }
-    
-          // Center text and black layer
-          const offsetX = -textWidth / 2.2;
-          const offsetY = -textHeight / 2.2;
-    
-          textMesh.position.set(offsetX, offsetY, 0.2); // Text position
-          if (blackLayerMesh) {
-            blackLayerMesh.position.set(offsetX, offsetY, plateStyle.material.thickness ? plateStyle.material.thickness / 20 + 0.24 : 0.24);
-          }
-        } else {
-          console.warn("Bounding box calculation failed for text geometry.");
-        }
-      });
+fontLoader.load("/fonts/Rubik_SemiBold_Regular.json", (font) => {
+  if (!font) {
+    console.error("Font loading failed");
+    return;
+  }
+
+  // Create the base colored text geometry
+  const textGeometry = new TextGeometry(plateNumber, {
+    font,
+    size: 2.8,
+    height: plateStyle.material.thickness ? plateStyle.material.thickness / 20 : 0,
+    curveSegments: 128,
+  });
+
+  // Create the thin black layer geometry
+  const blackLayerGeometry = new TextGeometry(plateNumber, {
+    font,
+    size: 2.8,
+    height: 0.1, // Very thin layer
+    curveSegments: 128,
+  });
+
+  // Check if the plate style is GEL
+  const isGelPlate = /GEL/i.test(plateStyle.name);
+
+  // Assign material for GEL or default plates
+  const textMaterial = isGelPlate
+    ? new THREE.MeshBasicMaterial({
+        color: 0x00ff00, // Green color
+        emissive: 0x00ff00, // Glow effect
+        emissiveIntensity: 1.5,
+      })
+    : new THREE.MeshBasicMaterial({ color: 0x000000 });
+
+  textMesh.material = textMaterial; // Assign the material to the mesh
+  textMesh.geometry = textGeometry; // Assign the geometry to the mesh
+
+  // Handle Acrylic plates with a black layer
+  const isAcrylicPlate = /ACRYLIC/i.test(plateStyle.name);
+  let blackLayerMesh: THREE.Mesh | null = null;
+
+  // Show only the black layer if both isGel and isAcrylic are true
+  if (isGelPlate && isAcrylicPlate) {
+    // Only show the text geometry and the black text layer
+    textMesh.geometry = textGeometry; // Ensure the correct geometry is set
+    textMesh.material = textMaterial; // Apply material as per gel plate
+
+    // Show the black layer mesh as well if needed
+    blackLayerMesh = new THREE.Mesh(blackLayerGeometry, new THREE.MeshBasicMaterial({ color: 0x000000 }));
+    blackLayerMesh.position.set(0, 0, plateStyle.material.thickness ? plateStyle.material.thickness / 20 + 0.1 : 0.1);
+    blackLayerMesh.name = "blackLayerMesh";
+    scene.add(blackLayerMesh); // Add black layer to the scene
+  } else if (isAcrylicPlate) {
+    // If only Acrylic plate is true, show only the text geometry (no black layer)
+    textMesh.geometry = textGeometry; // Set geometry for acrylic plate
+    textMesh.material = textMaterial; // Apply the material for acrylic plate
+  }
+
+  // Centering and scaling logic
+  textGeometry.computeBoundingBox();
+  if (textGeometry.boundingBox) {
+    let textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x || 0;
+    let textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y || 0;
+
+    console.log("Text dimensions:", textWidth, textHeight);
+
+    // Ensure text fits within the plate
+    const plateWidth = size.width * 0.7;
+    const plateHeight = size.height * 0.7;
+
+    if (textWidth > plateWidth) {
+      const scaleFactor = plateWidth / textWidth;
+      textMesh.scale.set(scaleFactor, scaleFactor, 1);
+      if (blackLayerMesh) {
+        blackLayerMesh.scale.set(scaleFactor, scaleFactor, 1);
+      }
+
+      // Recompute bounding box after scaling
+      textGeometry.computeBoundingBox();
+      textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x || 0;
+      textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y || 0;
+    }
+
+    // Center text and black layer
+    const offsetX = -textWidth / 2.2;
+    const offsetY = -textHeight / 2.2;
+
+    textMesh.position.set(offsetX, offsetY, 0.2); // Text position
+    if (blackLayerMesh) {
+      blackLayerMesh.position.set(offsetX, offsetY, plateStyle.material.thickness ? plateStyle.material.thickness / 20 + 0.24 : 0.24);
+    }
+  } else {
+    console.warn("Bounding box calculation failed for text geometry.");
+  }
+});
+
     }
     
         
