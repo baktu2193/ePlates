@@ -63,6 +63,30 @@ const createHollowBorderShape = (width: number, height: number, radius: number, 
   return shape;
 };
 
+
+// Function to create and add a spotlight to the scene
+const addSpotlight = (scene: THREE.Scene, position: { x: number, y: number, z: number }, targetPosition: { x: number, y: number, z: number }, color: number = 0xffffff, intensity: number = 1) => {
+  // Create the spotlight
+  const spotlight = new THREE.SpotLight(color, intensity);
+
+  // Set the spotlight position
+  spotlight.position.set(position.x, position.y, position.z);
+
+  // Make the spotlight target the specified position (can be the plate or any other object)
+  spotlight.target.position.set(targetPosition.x, targetPosition.y, targetPosition.z);
+
+  // Enable shadows for the spotlight (optional)
+  spotlight.castShadow = true;
+
+  // Add the spotlight to the scene
+  scene.add(spotlight);
+
+  // Optionally add a helper to visualize the spotlight in the scene (for debugging)
+  const spotLightHelper = new THREE.SpotLightHelper(spotlight);
+  scene.add(spotLightHelper);
+};
+
+
 interface PlateProps{
   plateStyle: Plate;
   plateNumber:string,
@@ -107,8 +131,21 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size={key:"11x8",width
     scene.add(ambientLight);
 
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(5, 5, 5);
+    directionalLight.position.set(4, 4.2, 5);
     scene.add(directionalLight);
+
+    // // Add spotlight
+    // addSpotlight(scene, 
+    //   { x: size.width * 0.8, y: size.height * 0.2, z: 30 }, // Position the light 1/5th from the top and on the right side
+    //   { x: 0, y: 0, z: 0 }, // Target the center of the plate
+    //   0xffffff, // Color of the spotlight
+    //   2 // Intensity of the spotlight
+    // );
+
+    // const directionalLight2 = new THREE.DirectionalLight(0xffffff, 1);
+    // directionalLight2.position.set(-5, -5, 5); // Mirror position relative to the left and bottom
+    // scene.add(directionalLight2);
+
 
     // Define the plate geometry
     const roundedRectShape = createRoundedRectShape(22, 4.5, 0.5); // Width, height, corner radius
@@ -120,10 +157,10 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size={key:"11x8",width
     const plateGeometry = new THREE.ExtrudeGeometry(roundedRectShape, extrudeSettings);
     const plateMaterial = new THREE.MeshPhysicalMaterial({
       color: 0xf1f0e6, // Slightly off-white color for a soft, creamy appearance
-      roughness: 0.9,   // Less roughness for a smoother, glossier look (still matte)
+      roughness: 1,   // Less roughness for a smoother, glossier look (still matte)
       metalness: 0.1,   // A little metallic sheen for a plastic-like finish
       emissive: 0xffffff, // Matching the base color for a subtle glow
-      emissiveIntensity: 0.5, // Reduce emissive intensity for a more natural look
+      emissiveIntensity: 1, // Reduce emissive intensity for a more natural look
       clearcoat: 0.8,    // A thin clearcoat for an extra glossy finish (optional)
       clearcoatRoughness: 0.1, // Slight roughness on the clearcoat for realistic shine
     });
@@ -135,7 +172,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size={key:"11x8",width
     scene.add(plate);
 
     const fontLoader = new FontLoader();
-    fontLoader.load("/fonts/Rubik_Bold.json", (font) => {
+    fontLoader.load("/fonts/Rubik_SemiBold_Regular.json", (font) => {
   // Use plate style properties (thickness, height, and fontSize) dynamically
   const textGeometry = new TextGeometry(plateNumber, {
     font,
@@ -251,8 +288,10 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size={key:"11x8",width
         // Update the plate color based on isRear state
         if (isRear) {
           plateMesh.material.color.set(0xffcd29); // Set to yellow if isRear is true
+          plateMesh.material.emissive.set(0xffcd29)
         } else {
-          plateMesh.material.color.set(0xf8f4e1); // Lighter milk color for the front
+          plateMesh.material.color.set(0xffffff); // Lighter milk color for the front
+          plateMesh.material.emissive.set(0xffffff)
         }
 
   
@@ -315,7 +354,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size={key:"11x8",width
     
       // Load the font and create new geometry
       const fontLoader = new FontLoader();
-      fontLoader.load("/fonts/Rubik_Bold.json", (font) => {
+      fontLoader.load("/fonts/Rubik_SemiBold_Regular.json", (font) => {
         if (!font) {
           console.error("Font loading failed");
           return;
