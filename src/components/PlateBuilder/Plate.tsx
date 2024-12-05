@@ -148,7 +148,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size={key:"11x8",width
 
 
     // Define the plate geometry
-    const roundedRectShape = createRoundedRectShape(22, 4.5, 0.5); // Width, height, corner radius
+    const roundedRectShape = createRoundedRectShape(18, 4.5, 0.5); // Width, height, corner radius
     const extrudeSettings = {
       depth: 0.2, // Thickness of the plate
       bevelEnabled: false, // Disable bevel for sharp edges
@@ -156,14 +156,15 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size={key:"11x8",width
 
     const plateGeometry = new THREE.ExtrudeGeometry(roundedRectShape, extrudeSettings);
     const plateMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xf1f0e6, // Slightly off-white color for a soft, creamy appearance
-      roughness: 1,   // Less roughness for a smoother, glossier look (still matte)
-      metalness: 0.1,   // A little metallic sheen for a plastic-like finish
-      emissive: 0xffffff, // Matching the base color for a subtle glow
-      emissiveIntensity: 1, // Reduce emissive intensity for a more natural look
-      clearcoat: 0.8,    // A thin clearcoat for an extra glossy finish (optional)
-      clearcoatRoughness: 0.1, // Slight roughness on the clearcoat for realistic shine
+      color: 0xF5F5DC, // Pure white color for the plate background
+      roughness: 0.8,  // Keep it matte, similar to real license plates
+      metalness: 0,    // Non-metallic appearance
+      emissive: 0xFFFFFF, // Match the white background for uniform brightness
+      emissiveIntensity: 0.8, // Subtle glow to avoid overexposure
+      clearcoat: 0.5,   // Optional clear coat for a light glossy effect
+      clearcoatRoughness: 0.2, // Slight roughness for a realistic look
     });
+
     
     const plate = new THREE.Mesh(plateGeometry, plateMaterial);
     plate.rotation.y = 0; // Reset any previous Y-axis rotation
@@ -172,7 +173,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size={key:"11x8",width
     scene.add(plate);
 
     const fontLoader = new FontLoader();
-    fontLoader.load("/fonts/Rubik_SemiBold_Regular.json", (font) => {
+    fontLoader.load("/fonts/C_W_3_B.json", (font) => {
   // Use plate style properties (thickness, height, and fontSize) dynamically
   const textGeometry = new TextGeometry(plateNumber, {
     font,
@@ -290,8 +291,8 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size={key:"11x8",width
           plateMesh.material.color.set(0xffcd29); // Set to yellow if isRear is true
           plateMesh.material.emissive.set(0xffcd29)
         } else {
-          plateMesh.material.color.set(0xffffff); // Lighter milk color for the front
-          plateMesh.material.emissive.set(0xffffff)
+          plateMesh.material.color.set(0xF5F5DC); // Lighter milk color for the front
+          plateMesh.material.emissive.set(0xF5F5DC)
         }
 
   
@@ -354,7 +355,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size={key:"11x8",width
     
       // Load the font and create new geometry
       const fontLoader = new FontLoader();
-fontLoader.load("/fonts/Rubik_SemiBold_Regular.json", (font) => {
+fontLoader.load("/fonts/C_W_3_B.json", (font) => {
   if (!font) {
     console.error("Font loading failed");
     return;
