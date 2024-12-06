@@ -156,13 +156,14 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size={key:"11x8",width
 
     const plateGeometry = new THREE.ExtrudeGeometry(roundedRectShape, extrudeSettings);
     const plateMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xF5F5DC, // Pure white color for the plate background
+      color: 0xFFFFFF, // Pure white color for the plate background
       roughness: 0.8,  // Keep it matte, similar to real license plates
-      metalness: 0,    // Non-metallic appearance
+      metalness: 0.5,    // Non-metallic appearance
       emissive: 0xFFFFFF, // Match the white background for uniform brightness
-      emissiveIntensity: 0.8, // Subtle glow to avoid overexposure
+      emissiveIntensity: 0.6, // Subtle glow to avoid overexposure
       clearcoat: 0.5,   // Optional clear coat for a light glossy effect
       clearcoatRoughness: 0.2, // Slight roughness for a realistic look
+      envMapIntensity: 1,
     });
 
     
@@ -291,8 +292,8 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size={key:"11x8",width
           plateMesh.material.color.set(0xffcd29); // Set to yellow if isRear is true
           plateMesh.material.emissive.set(0xffcd29)
         } else {
-          plateMesh.material.color.set(0xF5F5DC); // Lighter milk color for the front
-          plateMesh.material.emissive.set(0xF5F5DC)
+          plateMesh.material.color.set(0xFFFFFF); // Lighter milk color for the front
+          plateMesh.material.emissive.set(0xFFFFFF)
         }
 
   

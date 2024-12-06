@@ -60,7 +60,7 @@ const plateStyles: Plate[] = [
   {
     letters: 7,
     name: '4D 5mm Acrylic',
-    material: { type: '4D Acrylic', thickness: 3 },
+    material: { type: '4D Acrylic', thickness: 5 },
     frontPlate: {
       sizes: [
         { key: 'standard', width: 20.5, height: 4 },
@@ -289,12 +289,16 @@ const plateStyles: Plate[] = [
     material: { type: '4D Acrylic', thickness: 3 },
     frontPlate: {
       sizes: [
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 20.5, height: 4 },
         { key: 'hex', width: 20.5, height: 4 }
       ]
     },
     rearPlate: {
       sizes: [
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 20.5, height: 4 },
         { key: 'hex', width: 20.5, height: 4 },
         { key: 'square', width: 11, height: 8 }
@@ -306,15 +310,19 @@ const plateStyles: Plate[] = [
   {
     letters: 6,
     name: '4D 5mm Acrylic',
-    material: { type: '4D Acrylic', thickness: 3 },
+    material: { type: '4D Acrylic', thickness: 5 },
     frontPlate: {
       sizes: [
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 20.5, height: 4 },
         { key: 'hex', width: 20.5, height: 4 }
       ]
     },
     rearPlate: {
       sizes: [
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 20.5, height: 4 },
         { key: 'hex', width: 20.5, height: 4 },
         { key: 'square', width: 11, height: 8 }
@@ -329,12 +337,16 @@ const plateStyles: Plate[] = [
     material: { type: 'Gel', thickness: 1 },
     frontPlate: {
       sizes: [
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 18, height: 18 },
         { key: 'hex', width: 20.5, height: 20.5 }
       ]
     },
     rearPlate: {
       sizes: [
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 18, height: 18 },
         { key: 'hex', width: 20.5, height: 20.5 },
         { key: 'square', width: 20.5, height: 20.5 }
@@ -349,12 +361,16 @@ const plateStyles: Plate[] = [
     material: { type: '4D Acrylic and Gel', thickness: 3 },
     frontPlate: {
       sizes: [
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 18, height: 18 },
         { key: 'hex', width: 20.5, height: 20.5 }
       ]
     },
     rearPlate: {
       sizes: [
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 18, height: 18 },
         { key: 'hex', width: 20.5, height: 20.5 },
         { key: 'square', width: 20.5, height: 20.5 }
@@ -369,12 +385,16 @@ const plateStyles: Plate[] = [
     material: { type: '4D Acrylic and Gel', thickness: 5 },
     frontPlate: {
       sizes: [
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 18, height: 18 },
         { key: 'hex', width: 20.5, height: 20.5 }
       ]
     },
     rearPlate: {
       sizes: [
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 18, height: 18 },
         { key: 'hex', width: 20.5, height: 20.5 },
         { key: 'square', width: 20.5, height: 20.5 }
@@ -389,12 +409,16 @@ const plateStyles: Plate[] = [
     material: { type: 'Gel', thickness: 5 },
     frontPlate: {
       sizes: [
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 18, height: 18 },
         { key: 'hex', width: 20.5, height: 20.5 }
       ]
     },
     rearPlate: {
       sizes: [
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 18, height: 18 },
         { key: 'hex', width: 20.5, height: 20.5 },
         { key: 'square', width: 20.5, height: 20.5 }
@@ -409,12 +433,16 @@ const plateStyles: Plate[] = [
     material: { type: 'Printed', thickness: 1 },
     frontPlate: {
       sizes: [
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 20.5, height: 4 },
         { key: 'hex', width: 20.5, height: 4 }
       ]
     },
     rearPlate: {
       sizes: [
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 20.5, height: 4 },
         { key: 'hex', width: 20.5, height: 4 },
         { key: 'square', width: 11, height: 8 }
@@ -434,12 +462,16 @@ const plateStyles: Plate[] = [
     ],
     frontPlate: {
       sizes: [
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 20.5, height: 4 },
         { key: 'hex', width: 20.5, height: 4 }
       ]
     },
     rearPlate: {
       sizes: [
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 20.5, height: 4 },
         { key: 'hex', width: 20.5, height: 4 },
         { key: 'square', width: 11, height: 8 }
@@ -458,12 +490,16 @@ const plateStyles: Plate[] = [
       {name:"Black on Green",botton:'#ffffff',top:'#000000'},    ],
     frontPlate: {
       sizes: [
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 20.5, height: 4 },
         { key: 'hex', width: 20.5, height: 4 }
       ]
     },
     rearPlate: {
       sizes: [
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 20.5, height: 4 },
         { key: 'hex', width: 20.5, height: 4 },
         { key: 'square', width: 11, height: 8 }
@@ -533,12 +569,18 @@ const plateStyles: Plate[] = [
     material: { type: '4D Acrylic', thickness: 3 },
     frontPlate: {
       sizes: [
+        { key: '14"', width: 14, height: 4 },        
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 20.5, height: 4 },
         { key: 'hex', width: 20.5, height: 4 }
       ]
     },
     rearPlate: {
       sizes: [
+        { key: '14"', width: 14, height: 4 },        
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 20.5, height: 4 },
         { key: 'hex', width: 20.5, height: 4 },
         { key: 'square', width: 11, height: 8 }
@@ -553,12 +595,18 @@ const plateStyles: Plate[] = [
     material: { type: '4D Acrylic', thickness: 3 },
     frontPlate: {
       sizes: [
+        { key: '14"', width: 14, height: 4 },        
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 20.5, height: 4 },
         { key: 'hex', width: 20.5, height: 4 }
       ]
     },
     rearPlate: {
       sizes: [
+        { key: '14"', width: 14, height: 4 },        
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 20.5, height: 4 },
         { key: 'hex', width: 20.5, height: 4 },
         { key: 'square', width: 11, height: 8 }
@@ -568,17 +616,23 @@ const plateStyles: Plate[] = [
     preview: true
   },
   {
-    letters: 6,
+    letters: 5,
     name: '3D Gel',
     material: { type: 'Gel', thickness: 1 },
     frontPlate: {
       sizes: [
+        { key: '14"', width: 14, height: 4 },        
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 18, height: 18 },
         { key: 'hex', width: 20.5, height: 20.5 }
       ]
     },
     rearPlate: {
       sizes: [
+        { key: '14"', width: 14, height: 4 },        
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 18, height: 18 },
         { key: 'hex', width: 20.5, height: 20.5 },
         { key: 'square', width: 20.5, height: 20.5 }
@@ -588,17 +642,23 @@ const plateStyles: Plate[] = [
     preview: false
   },
   {
-    letters: 6,
+    letters: 5,
     name: '4D 3mm Acrylic and Gel',
     material: { type: '4D Acrylic and Gel', thickness: 3 },
     frontPlate: {
       sizes: [
+        { key: '14"', width: 14, height: 4 },        
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 18, height: 18 },
         { key: 'hex', width: 20.5, height: 20.5 }
       ]
     },
     rearPlate: {
       sizes: [
+        { key: '14"', width: 14, height: 4 },        
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 18, height: 18 },
         { key: 'hex', width: 20.5, height: 20.5 },
         { key: 'square', width: 20.5, height: 20.5 }
@@ -608,17 +668,23 @@ const plateStyles: Plate[] = [
     preview: true
   },
   {
-    letters: 6,
+    letters: 5,
     name: '4D 5mm Acrylic and Gel',
     material: { type: '4D Acrylic and Gel', thickness: 5 },
     frontPlate: {
       sizes: [
+        { key: '14"', width: 14, height: 4 },        
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 18, height: 18 },
         { key: 'hex', width: 20.5, height: 20.5 }
       ]
     },
     rearPlate: {
       sizes: [
+        { key: '14"', width: 14, height: 4 },        
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 18, height: 18 },
         { key: 'hex', width: 20.5, height: 20.5 },
         { key: 'square', width: 20.5, height: 20.5 }
@@ -628,17 +694,23 @@ const plateStyles: Plate[] = [
     preview: false
   },
   {
-    letters: 6,
+    letters: 5,
     name: '4D 5mm Gel',
     material: { type: 'Gel', thickness: 5 },
     frontPlate: {
       sizes: [
+        { key: '14"', width: 14, height: 4 },        
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 18, height: 18 },
         { key: 'hex', width: 20.5, height: 20.5 }
       ]
     },
     rearPlate: {
       sizes: [
+        { key: '14"', width: 14, height: 4 },        
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 18, height: 18 },
         { key: 'hex', width: 20.5, height: 20.5 },
         { key: 'square', width: 20.5, height: 20.5 }
@@ -648,17 +720,23 @@ const plateStyles: Plate[] = [
     preview: true
   },
   {
-    letters: 6,
+    letters: 5,
     name: 'Printed',
     material: { type: 'Printed', thickness: 1 },
     frontPlate: {
       sizes: [
+        { key: '14"', width: 14, height: 4 },        
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 20.5, height: 4 },
         { key: 'hex', width: 20.5, height: 4 }
       ]
     },
     rearPlate: {
       sizes: [
+        { key: '14"', width: 14, height: 4 },        
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 20.5, height: 4 },
         { key: 'hex', width: 20.5, height: 4 },
         { key: 'square', width: 11, height: 8 }
@@ -668,7 +746,7 @@ const plateStyles: Plate[] = [
     preview: true
   },
   {
-    letters: 6,
+    letters: 5,
     name: '4D Neon Acrylic',
     material: { type: '4D Neon Acrylic', thickness: 3 },
     gelColors:[
@@ -678,12 +756,18 @@ const plateStyles: Plate[] = [
     ],
     frontPlate: {
       sizes: [
+        { key: '14"', width: 14, height: 4 },        
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 20.5, height: 4 },
         { key: 'hex', width: 20.5, height: 4 }
       ]
     },
     rearPlate: {
       sizes: [
+        { key: '14"', width: 14, height: 4 },        
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 20.5, height: 4 },
         { key: 'hex', width: 20.5, height: 4 },
         { key: 'square', width: 11, height: 8 }
@@ -693,7 +777,7 @@ const plateStyles: Plate[] = [
     preview: true
   },
   {
-    letters: 6,
+    letters: 5,
     name: '4D Neon Acrylic and Gel ',
     material: { type: '4D Neon Acrylic and Gel ', thickness: 3 },
     gelColors:[
@@ -702,12 +786,18 @@ const plateStyles: Plate[] = [
       {name:"Black on Green",botton:'#ffffff',top:'#000000'},    ],
     frontPlate: {
       sizes: [
+        { key: '14"', width: 14, height: 4 },        
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 20.5, height: 4 },
         { key: 'hex', width: 20.5, height: 4 }
       ]
     },
     rearPlate: {
       sizes: [
+        { key: '14"', width: 14, height: 4 },        
+        { key: '16"', width: 16, height: 4 },
+        { key: '18"', width: 18, height: 4 },
         { key: 'standard', width: 20.5, height: 4 },
         { key: 'hex', width: 20.5, height: 4 },
         { key: 'square', width: 11, height: 8 }
@@ -717,7 +807,7 @@ const plateStyles: Plate[] = [
     preview: true
   },
   {
-    letters: 6,
+    letters: 5,
     name: 'Bubble',
     material: { type: 'Bubble', thickness: 3 },
     frontPlate: {
@@ -735,7 +825,7 @@ const plateStyles: Plate[] = [
     preview: false
   },
   {
-    letters: 7,
+    letters: 5,
     name: 'Motorbike Plates Printed',
     material: { type: 'Motorbike Plates Printed', thickness: 1 },
     frontPlate: {
@@ -752,7 +842,7 @@ const plateStyles: Plate[] = [
     preview: false
   },
   {
-    letters: 7,
+    letters: 5,
     name: 'Motorbike Plates 4D Acrylic',
     material: { type: 'Motorbike Plates 4D Acrylic', thickness: 1 },
     frontPlate: {
