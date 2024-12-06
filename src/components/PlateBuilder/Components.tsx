@@ -86,13 +86,18 @@ interface STYLEProps {
   className?: string;
   frontStyle: Plate;
   rearStyle: Plate;
+  plateNumber:String,
   setFrontStyle: (style: Plate) => void;
   setRearStyle: (style: Plate) => void;
 }
 
-export function STYLE({ className, frontStyle, rearStyle, setFrontStyle, setRearStyle }: STYLEProps) {
-  const plateStyles = getStylesByLetterCount(7); // Assuming getStylesByLetterCount is a function that returns plate styles
+export function STYLE({ className, frontStyle, rearStyle,plateNumber, setFrontStyle, setRearStyle }: STYLEProps) {
+  const [plateStyles,setPlateSetyles] = useState<Plate[]>(getStylesByLetterCount(7)); // Assuming getStylesByLetterCount is a function that returns plate styles
   const [sameAsFront, setSameAsFront] = useState(true);
+
+  useEffect(()=>{
+    setPlateSetyles(getStylesByLetterCount((plateNumber.length-1)))
+  },[plateNumber])
 
   useEffect(()=>{
     if(sameAsFront){
@@ -121,10 +126,10 @@ export function STYLE({ className, frontStyle, rearStyle, setFrontStyle, setRear
 
       {/* Front Style Tab */}
       <TabsContent value="front" className="flex flex-col gap-3 col-span-2 px-2 rounded-sm">
-        {plateStyles.map((p: Plate) => (
+        {plateStyles.map((p: Plate,index) => (
           <div
             className={` pb-2 rounded-sm  pt-[2px] px-[2px] ${frontStyle.name === p.name ? "bg-black text-white" : "bg-white"}`}
-            key={p.name}
+            key={index}
             onClick={() => handleFrontStyleClick(p)} // Trigger state change for front style
           >
             <div className=" relative h-[140px]"><Image src={"/178348.jpg"} alt="img" className=" rounded-t-sm" fill priority /></div>

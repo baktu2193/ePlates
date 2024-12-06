@@ -40,15 +40,15 @@ export default function PlateBuilder() {
 
   // Border states - Set dynamically based on frontStyle and rearStyle
 const [frontBorder, setFrontBorder] = useState<Border>(() => ({
-  name: frontStyle.border?.name || 'Standard Border',  // Default based on frontStyle
-  type: frontStyle.border?.type || 'solid',  // Default based on frontStyle
-  material: frontStyle.border?.material || { type: 'metal', thickness: 0 },  // Default material
+  name: 'Standard Border',  // Default based on frontStyle
+  type: 'solid',  // Default based on frontStyle
+  material: { type: 'metal', thickness: 1 },  // Default material
 }));
 
 const [rearBorder, setRearBorder] = useState<Border>(() => ({
   name: rearStyle.border?.name || 'Standard Border',  // Default based on rearStyle
   type: rearStyle.border?.type || 'solid',  // Default based on rearStyle
-  material: rearStyle.border?.material || { type: 'metal', thickness: 0 },  // Default material
+  material: rearStyle.border?.material || { type: 'metal', thickness: 1 },  // Default material
 }));
 
 // Update border states if frontStyle or rearStyle changes
@@ -138,7 +138,7 @@ const [rearBorder, setRearBorder] = useState<Border>(() => ({
                 />
               </TabsContent>
               <TabsContent value="style" className="col-span-2 h-[390px]">
-                <STYLE rearStyle={rearStyle} frontStyle={frontStyle} setRearStyle={setRearStyle} setFrontStyle={setFrontStyle} />
+                <STYLE rearStyle={rearStyle} frontStyle={frontStyle} plateNumber={plateNumber} setRearStyle={setRearStyle} setFrontStyle={setFrontStyle} />
               </TabsContent>
               <TabsContent value="sizing" className="col-span-2 h-[390px]">
                 <SIZING rearStyle={rearStyle} frontStyle={frontStyle} rearSize={rearSize} frontSize={frontSize} setRearSize={setRearSize} setFrontSize={setFrontSize} />
