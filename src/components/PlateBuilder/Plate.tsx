@@ -173,7 +173,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size={key:"11x8",width
     scene.add(plate);
 
     const fontLoader = new FontLoader();
-    fontLoader.load("/fonts/C_W_3_B.json", (font) => {
+    fontLoader.load("/fonts/Charles-WrightBold.json", (font) => {
   // Use plate style properties (thickness, height, and fontSize) dynamically
   const textGeometry = new TextGeometry(plateNumber, {
     font,
@@ -355,7 +355,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size={key:"11x8",width
     
       // Load the font and create new geometry
       const fontLoader = new FontLoader();
-fontLoader.load("/fonts/C_W_3_B.json", (font) => {
+fontLoader.load("/fonts/Charles-WrightBold.json", (font) => {
   if (!font) {
     console.error("Font loading failed");
     return;
