@@ -6,7 +6,7 @@ import PlateSummary from "@/components/PlateBuilder/PlateSummary";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
-import {  Border, Plate, PlateSize, plateStyles } from "../../../PlateStyles";
+import {  Border, getStylesByLetterCount, Plate, PlateSize, plateStyles } from "../../../PlateStyles";
 
 export default function PlateBuilder() {
   const [plateNumber, setPlateNumber] = useState("MD 22");
@@ -19,7 +19,11 @@ export default function PlateBuilder() {
   const [rearPrice, setRearPrice] = useState(23.99);
 
   useEffect(()=>{
-    plateNumber
+    if([5,6,7].includes(plateNumber.length-1)){
+      const style=getStylesByLetterCount((plateNumber.length-1))[0]
+      setFrontStyle(style)
+      setRearStyle(style)
+    }
   },[plateNumber])
 
   const [frontSize, setFrontSize] = useState<PlateSize>(() => {
@@ -36,6 +40,11 @@ export default function PlateBuilder() {
     }
     return { key: 'standard', width: 18, height: 18 }; // Default fallback
   });
+
+  useEffect(()=>{
+    setFrontSize(frontStyle.frontPlate.sizes[0])
+    setRearSize(rearStyle.rearPlate.sizes[0])
+  },[rearStyle,frontStyle])
 
 
   // Border states - Set dynamically based on frontStyle and rearStyle
@@ -158,9 +167,9 @@ const [rearBorder, setRearBorder] = useState<Border>(() => ({
                 </div>
                 {
                   isRear?
-                  <ThreeDRectangle border={rearBorder} isRear={true} plateNumber={plateNumber} plateStyle={rearStyle} />
+                  <ThreeDRectangle border={rearBorder} isRear={true} size={rearSize} plateNumber={plateNumber} plateStyle={rearStyle} />
                   :
-                  <ThreeDRectangle border={frontBorder} isRear={false} plateNumber={plateNumber} plateStyle={frontStyle}  />
+                  <ThreeDRectangle border={frontBorder} isRear={false} size={frontSize} plateNumber={plateNumber} plateStyle={frontStyle}  />
                 }
               </div>
             </div>

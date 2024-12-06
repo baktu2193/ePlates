@@ -91,11 +91,11 @@ interface PlateProps{
   plateStyle: Plate;
   plateNumber:string,
   isRear:boolean,
-  size?:PlateSize,
+  size:PlateSize,
   border:Border,
 }
 
-const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size={key:"11x8",width:20,height:5},border }: PlateProps) => {
+const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlateProps) => {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const [scene, setScene] = useState<THREE.Scene | null>(null);
   const [textMesh, setTextMesh] = useState<THREE.Mesh | null>(null);
@@ -148,7 +148,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size={key:"11x8",width
 
 
     // Define the plate geometry
-    const roundedRectShape = createRoundedRectShape(18, 4.5, 0.5); // Width, height, corner radius
+    const roundedRectShape = createRoundedRectShape(size.width, size.height, 0.5); // Width, height, corner radius
     const extrudeSettings = {
       depth: 0.2, // Thickness of the plate
       bevelEnabled: false, // Disable bevel for sharp edges
@@ -373,7 +373,7 @@ fontLoader.load("/fonts/Charles-WrightBold.json", (font) => {
   // Create the thin black layer geometry
   const blackLayerGeometry = new TextGeometry(plateNumber, {
     font,
-    size: 2.8,
+    size: 2.7,
     height: 0.1, // Very thin layer
     curveSegments: 128,
   });
@@ -426,18 +426,18 @@ fontLoader.load("/fonts/Charles-WrightBold.json", (font) => {
     const plateWidth = size.width * 0.7;
     const plateHeight = size.height * 0.7;
 
-    if (textWidth > plateWidth) {
-      const scaleFactor = plateWidth / textWidth;
-      textMesh.scale.set(scaleFactor, scaleFactor, 1);
-      if (blackLayerMesh) {
-        blackLayerMesh.scale.set(scaleFactor, scaleFactor, 1);
-      }
+    // if (textWidth > plateWidth) {
+    //   const scaleFactor = plateWidth / textWidth;
+    //   textMesh.scale.set(scaleFactor, scaleFactor, 1);
+    //   if (blackLayerMesh) {
+    //     blackLayerMesh.scale.set(scaleFactor, scaleFactor, 1);
+    //   }
 
-      // Recompute bounding box after scaling
-      textGeometry.computeBoundingBox();
-      textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x || 0;
-      textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y || 0;
-    }
+    //   // Recompute bounding box after scaling
+    //   textGeometry.computeBoundingBox();
+    //   textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x || 0;
+    //   textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y || 0;
+    // }
 
     // Center text and black layer
     const offsetX = -textWidth / 2.2;
