@@ -8,8 +8,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
 import {  Border, getStylesByLetterCount, Plate, PlateSize, plateStyles } from "../../../PlateStyles";
 
+const UKPlatesRegEx=/^[A-Z]{2}[0-9]{2}\s?[A-Z]{3}$/
+
 export default function PlateBuilder() {
-  const [plateNumber, setPlateNumber] = useState("MD 22");
+  const [plateNumber, setPlateNumber] = useState("AB12 XYZ");
   const [roadLegalSpacing, setRoadLegalSpacing] = useState(true);
   const [iWantFrontPlate, setIWantFrontPlate] = useState(true);
   const [iWantBackPlate, setIWantBackPlate] = useState(true);
@@ -18,11 +20,20 @@ export default function PlateBuilder() {
   const [frontPrice, setFrontPrice] = useState(23.99);
   const [rearPrice, setRearPrice] = useState(23.99);
 
+  const [isValidPlate,setIsValidPlate]=useState(false)
+
   useEffect(()=>{
     if([5,6,7].includes(plateNumber.length-1)){
-      const style=getStylesByLetterCount((plateNumber.length-1))[0]
-      setFrontStyle(style)
-      setRearStyle(style)
+      if(UKPlatesRegEx.test(plateNumber)){
+        setIsValidPlate(true)
+
+        const style=getStylesByLetterCount((plateNumber.length-1))[0]
+        setFrontStyle(style)
+        setRearStyle(style)
+      }else{
+        setIsValidPlate(false)
+      }
+
     }
   },[plateNumber])
 
@@ -55,9 +66,9 @@ const [frontBorder, setFrontBorder] = useState<Border>(() => ({
 }));
 
 const [rearBorder, setRearBorder] = useState<Border>(() => ({
-  name: rearStyle.border?.name || 'Standard Border',  // Default based on rearStyle
-  type: rearStyle.border?.type || 'solid',  // Default based on rearStyle
-  material: rearStyle.border?.material || { type: 'metal', thickness: 1 },  // Default material
+  name: 'Standard Border',  // Default based on rearStyle
+  type: 'solid',  // Default based on rearStyle
+  material: { type: 'metal', thickness: 1 },  // Default material
 }));
 
 // Update border states if frontStyle or rearStyle changes
@@ -99,28 +110,28 @@ const [rearBorder, setRearBorder] = useState<Border>(() => ({
               </TabsTrigger>
               <TabsTrigger
                 className="w-[140px] text-lg"
-                disabled={plateNumber === ""}
+                disabled={!isValidPlate}
                 value="style"
               >
                 Style
               </TabsTrigger>
               <TabsTrigger
                 className="w-[140px] text-lg"
-                disabled={plateNumber === ""}
+                disabled={!isValidPlate}
                 value="sizing"
               >
                 Sizing
               </TabsTrigger>
               <TabsTrigger
                 className="w-[140px] text-lg"
-                disabled={plateNumber === ""}
+                disabled={!isValidPlate}
                 value="border"
               >
                 Border
               </TabsTrigger>
               <TabsTrigger
                 className="w-[140px] text-lg"
-                disabled={plateNumber === ""}
+                disabled={!isValidPlate}
                 value="finish"
               >
                 Finish

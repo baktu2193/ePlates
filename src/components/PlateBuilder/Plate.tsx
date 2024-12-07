@@ -178,8 +178,8 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
   // Use plate style properties (thickness, height, and fontSize) dynamically
   const textGeometry = new TextGeometry(plateNumber, {
     font,
-    size: 2.8, // This controls the height of the letters (Y-axis)
-    height: plateStyle.material.thickness==null?0:plateStyle.material.thickness/10, // This controls the extrusion depth (Z-axis thickness)
+    size: 2.7, // This controls the height of the letters (Y-axis)
+    height: plateStyle.material.thickness==null?0:plateStyle.material.thickness/20, // This controls the extrusion depth (Z-axis thickness)
     curveSegments: 128, // Controls curve smoothness
   });
 
@@ -270,7 +270,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
       // Create the plate geometry first
       const roundedRectShape = createRoundedRectShape(size.width, size.height, 0.5);
       const extrudeSettings = {
-        depth: 0.2,
+        depth: 0.1,
         bevelEnabled: false, // Optional: Set to true if you want bevels
         curveSegments: 256,
       };
@@ -307,27 +307,30 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
           existingBorderMesh.material.dispose(); // Dispose of old material
         }
   
+        if(border.material.thickness){
+          
         // Create the border geometry with the scaled size
-        const borderGeometry = new THREE.ExtrudeGeometry(
-          createHollowBorderShape((size.width-0.5) * scaleFactor, (size.height-0.5) * scaleFactor, 0.5, 0.15), {
-            depth: border.material.thickness/10, // Depth of the border
-            bevelEnabled: false,
-          }
-        );
-  
-        // Apply material to the border
-        const borderMaterial = new THREE.MeshBasicMaterial({
-          color: 0x000000, // Border color (black)
-           // Render both sides of the border
-        });
-  
-        // Create the border mesh and add it to the scene
-        const borderMesh = new THREE.Mesh(borderGeometry, borderMaterial);
-        borderMesh.position.set(0, 0, 0.15); // Position it slightly above the plate
-        borderMesh.name = 'borderMesh'; // Set a name to easily find it later
-  
-        // Add the new border mesh to the scene
-        scene.add(borderMesh);
+          const borderGeometry = new THREE.ExtrudeGeometry(
+            createHollowBorderShape((size.width-0.5) * scaleFactor, (size.height-0.5) * scaleFactor, 0.5, 0.15), {
+              depth: border.material.thickness/20, // Depth of the border
+              bevelEnabled: false,
+            }
+          );
+    
+          // Apply material to the border
+          const borderMaterial = new THREE.MeshBasicMaterial({
+            color: 0x000000, // Border color (black)
+            // Render both sides of the border
+          });
+    
+          // Create the border mesh and add it to the scene
+          const borderMesh = new THREE.Mesh(borderGeometry, borderMaterial);
+          borderMesh.position.set(0, 0, 0.15); // Position it slightly above the plate
+          borderMesh.name = 'borderMesh'; // Set a name to easily find it later
+    
+          // Add the new border mesh to the scene
+          scene.add(borderMesh);
+        }
       }
     }
   
@@ -365,7 +368,7 @@ fontLoader.load("/fonts/Charles-WrightBold.json", (font) => {
   // Create the base colored text geometry
   const textGeometry = new TextGeometry(plateNumber, {
     font,
-    size: 2.8,
+    size: 2.7,
     height: plateStyle.material.thickness ? plateStyle.material.thickness / 20 : 0,
     curveSegments: 128,
   });
@@ -440,7 +443,7 @@ fontLoader.load("/fonts/Charles-WrightBold.json", (font) => {
     // }
 
     // Center text and black layer
-    const offsetX = -textWidth / 2.2;
+    const offsetX = -textWidth / 2;
     const offsetY = -textHeight / 2.2;
 
     textMesh.position.set(offsetX, offsetY, 0.2); // Text position

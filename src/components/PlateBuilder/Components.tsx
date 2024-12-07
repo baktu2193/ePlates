@@ -32,7 +32,7 @@ export function Start({
                 className="bg-white" 
                 value={plateNumber} 
                 onChange={(e) => setPlateNumber(e.target.value)} 
-                maxLength={7}
+                maxLength={8}
             />
             <label className="border bg-white/95 px-2 py-1 rounded-sm">
                 Formatted as <span className="font-bold">{plateNumber}</span>
@@ -277,7 +277,7 @@ export function BORDER({ className, frontBorder,rearBorder,frontStyle,rearStyle,
     }
   },[sameAsFront])
 
-  const handleFrontSizeClick = (style: Border) => {
+  const handleFrontBorderClick = (style: Border) => {
     setFrontBorder(style); // This will update the state in the parent component
     
   };
@@ -288,9 +288,11 @@ export function BORDER({ className, frontBorder,rearBorder,frontStyle,rearStyle,
     }
   },[frontBorder])
 
-  const handleRearSizeClick = (style: Border) => {
+  const handleRearBorderClick = (style: Border) => {
     setRearBorder(style); // This will update the state in the parent component
   };
+
+  const noBorder:Border={name:"None",material:{thickness:null,type:"None"},type:"None"}
 
   return (
     <Tabs defaultValue="front" className={`flex flex-col overflow-y-scroll items-stretch bg-yellow rounded-sm h-full ${className}`}>
@@ -306,17 +308,20 @@ export function BORDER({ className, frontBorder,rearBorder,frontStyle,rearStyle,
       {/* Front Style Tab */}
       <TabsContent value="front" className="flex flex-col gap-3 col-span-2 px-2 rounded-sm">
           <div
-            className={` pb-2 rounded-sm  pt-[2px] px-[2px] bg-white`}
-          >
-            <div className=" relative h-[140px]"><Image src={"/178348.jpg"} alt="img" className=" rounded-t-sm" fill priority /></div>
-            <p className="px-2 py-2">{frontBorder.name}</p>
-            {/* <div className="px-2 flex flex-wrap gap-1">
-                  {
-                    frontStyle.frontPlate.sizes.map((size)=>(
-                      <Button onClick={()=>handleFrontSizeClick(size)} className={`bg-white p-1  border-2 ${frontSize.key==size.key?"border-black ":""}`} key={size.key}>{size.width +"x"+ size.height}</Button>
-                    ))
-                  }
-                </div> */}
+            onClick={()=>handleFrontBorderClick(noBorder)}
+            className={` pb-2 rounded-sm  pt-[2px] px-[2px] ${frontBorder.name==noBorder.name?' bg-black':'bg-white'}`}
+              >
+            <div className=" relative h-[140px]">
+            <Image src={"/178348.jpg"} alt="img" className=" rounded-t-sm" fill priority /></div>
+            <p className={` px-2 py-2 ${frontBorder.name==noBorder.name?" text-white":"text-black"} `}>No border</p>
+          </div>
+          <div
+            onClick={()=>handleFrontBorderClick(frontStyle.border)}
+            className={` pb-2 rounded-sm  pt-[2px] px-[2px] ${frontBorder.name==frontStyle.border.name?' bg-black':'bg-white'}`}
+            >
+            <div className=" relative h-[140px]">
+            <Image src={"/178348.jpg"} alt="img" className=" rounded-t-sm" fill priority /></div>
+            <p className={` px-2 py-2 ${frontBorder.name==frontStyle.border.name?" text-white":" text-black"} `}>{frontStyle.border.name}</p>
           </div>
       </TabsContent>
 
@@ -329,19 +334,38 @@ export function BORDER({ className, frontBorder,rearBorder,frontStyle,rearStyle,
 
         {/* Conditionally render rear style options based on sameAsFront */}
         {!sameAsFront && (
+          <>
           <div
-          className={` pb-2 rounded-sm  pt-[2px] px-[2px] bg-white`}
-        >
-          <div className=" relative h-[140px]"><Image src={"/178348.jpg"} alt="img" className=" rounded-t-sm" fill priority /></div>
-          <p className="px-2 py-2">{rearBorder.name}</p>
-          {/* <div className="px-2 flex flex-wrap gap-1">
-                {
-                  rearStyle.rearPlate.sizes.map((size)=>(
-                    <Button onClick={()=>handleRearSizeClick(size)} className={`bg-white p-1  border-2 ${rearSize.key==size.key?"border-black ":""}`}  key={size.key}>{size.width +"x"+ size.height}</Button>
-                  ))
-                }
-              </div> */}
-        </div>
+          onClick={()=>handleRearBorderClick(noBorder)}
+          className={` pb-2 rounded-sm  pt-[2px] px-[2px] ${rearBorder.name==noBorder.name?' bg-black':'bg-white'}`}
+          >
+            <div className=" relative h-[140px]">
+            <Image src={"/178348.jpg"} alt="img" className=" rounded-t-sm" fill priority /></div>
+            <p className="px-2 py-2">None Border</p>
+            {/* <div className="px-2 flex flex-wrap gap-1">
+                  {
+                    rearStyle.rearPlate.sizes.map((size)=>(
+                      <Button onClick={()=>handleRearSizeClick(size)} className={`bg-white p-1  border-2 ${rearSize.key==size.key?"border-black ":""}`}  key={size.key}>{size.width +"x"+ size.height}</Button>
+                    ))
+                  }
+                </div> */}
+          </div>
+          <div
+          onClick={()=>handleRearBorderClick(rearStyle.border)}
+          className={` pb-2 rounded-sm  pt-[2px] px-[2px] ${rearBorder.name==rearStyle.border.name?' bg-black':'bg-white'}`}
+          >
+            <div className=" relative h-[140px] ">
+            <Image src={"/178348.jpg"} alt="img" className=" rounded-t-sm" fill priority /></div>
+            <p className="px-2 py-2">{rearStyle.border.name}</p>
+            {/* <div className="px-2 flex flex-wrap gap-1">
+                  {
+                    rearStyle.rearPlate.sizes.map((size)=>(
+                      <Button onClick={()=>handleRearSizeClick(size)} className={`bg-white p-1  border-2 ${rearSize.key==size.key?"border-black ":""}`}  key={size.key}>{size.width +"x"+ size.height}</Button>
+                    ))
+                  }
+                </div> */}
+          </div>
+          </>
         )}
       </TabsContent>
     </Tabs>
