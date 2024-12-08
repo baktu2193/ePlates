@@ -7,10 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
 import {  Border, getStylesByLetterCount, Plate, PlateSize, plateStyles } from "../../../PlateStyles";
+import { useToast } from "@/hooks/use-toast";
 
-const UKPlatesRegEx=/^[A-Z]{2}[0-9]{2}\s?[A-Z]{3}$/
 
 export default function PlateBuilder() {
+
+  const { toast } = useToast()
+
+
   const [plateNumber, setPlateNumber] = useState("AB12 XYZ");
   const [roadLegalSpacing, setRoadLegalSpacing] = useState(true);
   const [iWantFrontPlate, setIWantFrontPlate] = useState(true);
@@ -23,17 +27,18 @@ export default function PlateBuilder() {
   const [isValidPlate,setIsValidPlate]=useState(false)
 
   useEffect(()=>{
-    if([5,6,7].includes(plateNumber.length-1)){
-      if(UKPlatesRegEx.test(plateNumber)){
+    if((plateNumber.replace(/ /g, "")).length>4 &&(plateNumber.replace(/ /g, "")).length<8){
         setIsValidPlate(true)
+        console.log("Plate length : ",plateNumber.length)
+        if([5,6,7].includes(plateNumber.length-1)){
+
 
         const style=getStylesByLetterCount((plateNumber.length-1))[0]
         setFrontStyle(style)
         setRearStyle(style)
-      }else{
-        setIsValidPlate(false)
       }
-
+    }else{
+      setIsValidPlate(false)
     }
   },[plateNumber])
 
@@ -89,6 +94,16 @@ const [rearBorder, setRearBorder] = useState<Border>(() => ({
 // }, [rearStyle]);  // Runs when rearStyle changes
   
   
+  useEffect(()=>{
+
+    if(!roadLegalSpacing){
+      toast({
+        title:"Not legal",
+        description:"This plate will not be road legal",
+        variant:"destructive"
+      })
+    }
+  },[roadLegalSpacing])
   
 
   const [isRear,setIsRear]=useState(false)
@@ -146,6 +161,7 @@ const [rearBorder, setRearBorder] = useState<Border>(() => ({
                 className="col-span-2 bg-yellow px-3 rounded-sm"
               >
                 <Start
+                  isValidPlate={isValidPlate}
                   plateNumber={plateNumber}
                   setPlateNumber={setPlateNumber}
                   roadLegalSpacing={roadLegalSpacing}

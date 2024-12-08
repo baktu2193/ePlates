@@ -13,7 +13,8 @@ export function Start({
     setIWantFrontPlate, 
     iWantBackPlate, 
     setIWantBackPlate,
-    className
+    className,
+    isValidPlate
 }: { 
     plateNumber: string; 
     setPlateNumber: (value: string) => void; 
@@ -23,8 +24,10 @@ export function Start({
     setIWantFrontPlate: (value: boolean) => void; 
     iWantBackPlate: boolean; 
     setIWantBackPlate: (value: boolean) => void;
-    className?:string
+    className?:string,
+    isValidPlate:boolean
 }) {
+
     return (
         <div className={cn("",className)}>
             <h5>Your registration</h5>
@@ -33,10 +36,18 @@ export function Start({
                 value={plateNumber} 
                 onChange={(e) => setPlateNumber(e.target.value)} 
                 maxLength={8}
+                minLength={6}
             />
-            <label className="border bg-white/95 px-2 py-1 rounded-sm">
-                Formatted as <span className="font-bold">{plateNumber}</span>
-            </label>
+            {
+              isValidPlate?
+              <label className="border bg-white/95 px-2 py-1 rounded-sm">
+                  Formatted as <span className="font-bold">{plateNumber}</span>
+              </label>
+              :
+              <label className="border bg-red-400/95 px-2 py-1 rounded-sm">
+                  Not road legal
+              </label>
+            }
 
             <div className=" grid gap-1">
                 <label className=" font-semibold">Character Spacing</label>
@@ -80,6 +91,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Border, getStylesByLetterCount, Plate, PlateSize } from "../../../PlateStyles";
 import Image from "next/image";
 import { Button } from "../ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 
 interface STYLEProps {

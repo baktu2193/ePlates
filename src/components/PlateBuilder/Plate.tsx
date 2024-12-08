@@ -107,12 +107,12 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
     setScene(scene); // Set the scene once
 
     const camera = new THREE.PerspectiveCamera(
-      75,
+      60,
       mountRef.current.clientWidth / mountRef.current.clientHeight,
-      0.1,
-      200
+      0.2,
+      100
     );
-    camera.position.set(0, 0, 10); // Camera positioned to view the plate and text
+    camera.position.set(0, 0, 11); // Camera positioned to view the plate and text
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });  // Enable antialiasing
     renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
@@ -127,12 +127,15 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
     
 
     // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8); // Softer light
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Softer light
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(4, 4.2, 5);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
+    directionalLight.position.set(1, 0.5, 5);
     scene.add(directionalLight);
+    const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.9);
+    directionalLight2.position.set(-1, -0.4, 5);
+    scene.add(directionalLight2);
 
     // // Add spotlight
     // addSpotlight(scene, 
@@ -142,9 +145,6 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
     //   2 // Intensity of the spotlight
     // );
 
-    // const directionalLight2 = new THREE.DirectionalLight(0xffffff, 1);
-    // directionalLight2.position.set(-5, -5, 5); // Mirror position relative to the left and bottom
-    // scene.add(directionalLight2);
 
 
     // Define the plate geometry
@@ -164,6 +164,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
       clearcoat: 0.5,   // Optional clear coat for a light glossy effect
       clearcoatRoughness: 0.2, // Slight roughness for a realistic look
       envMapIntensity: 1,
+      reflectivity: 1,
     });
 
     
@@ -178,7 +179,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
   // Use plate style properties (thickness, height, and fontSize) dynamically
   const textGeometry = new TextGeometry(plateNumber, {
     font,
-    size: 2.7, // This controls the height of the letters (Y-axis)
+    size: 2.6, // This controls the height of the letters (Y-axis)
     height: plateStyle.material.thickness==null?0:plateStyle.material.thickness/20, // This controls the extrusion depth (Z-axis thickness)
     curveSegments: 128, // Controls curve smoothness
   });
@@ -273,6 +274,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
         depth: 0.1,
         bevelEnabled: false, // Optional: Set to true if you want bevels
         curveSegments: 256,
+        reflectivity: 1,
       };
   
       const plateGeometry = new THREE.ExtrudeGeometry(roundedRectShape, extrudeSettings);
@@ -359,102 +361,131 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
     
       // Load the font and create new geometry
       const fontLoader = new FontLoader();
-fontLoader.load("/fonts/Charles-WrightBold.json", (font) => {
-  if (!font) {
-    console.error("Font loading failed");
-    return;
-  }
+      fontLoader.load("/fonts/Charles-WrightBold.json", (font) => {
+        if (!font) {
+          console.error("Font loading failed");
+          return;
+        }
 
-  // Create the base colored text geometry
-  const textGeometry = new TextGeometry(plateNumber, {
-    font,
-    size: 2.7,
-    height: plateStyle.material.thickness ? plateStyle.material.thickness / 20 : 0,
-    curveSegments: 128,
-  });
+        // Create the base colored text geometry
+        const textGeometry = new TextGeometry(plateNumber, {
+          font,
+          size: 2.6,
+          height: plateStyle.material.thickness ? plateStyle.material.thickness / 20 : 0,
+          curveSegments: 16,
+          bevelEnabled: true,
+          bevelSize: 0.05,
+          bevelThickness:0.05,
+        });
 
-  // Create the thin black layer geometry
-  const blackLayerGeometry = new TextGeometry(plateNumber, {
-    font,
-    size: 2.7,
-    height: 0.1, // Very thin layer
-    curveSegments: 128,
-  });
+        // Create the thin black layer geometry
+        const blackLayerGeometry = new TextGeometry(plateNumber, {
+          font,
+          size: 2.6,
+          height: 0.1, // Very thin layer
+          curveSegments: 16,
+          bevelEnabled: true,
+          bevelSize: 0.05,
+          bevelThickness:0.05,
+        });
 
-  // Check if the plate style is GEL
-  const isGelPlate = /GEL/i.test(plateStyle.name);
+        // Check if the plate style is GEL
+        const isGelPlate = /GEL/i.test(plateStyle.name);
 
-  // Assign material for GEL or default plates
-  const textMaterial = isGelPlate
-    ? new THREE.MeshBasicMaterial({
-        color: 0x00ff00, // Green color
-        emissive: 0x00ff00, // Glow effect
-        emissiveIntensity: 1.5,
-      })
-    : new THREE.MeshBasicMaterial({ color: 0x000000 });
+        // Assign material for GEL or default plates
+        const textMaterial = isGelPlate
+        ? new THREE.MeshPhysicalMaterial({
+            color: 0x000000, // Black base color
+            emissive: 0xffffff, // Subtle white glow
+            emissiveIntensity: 0.3, // Moderate glow
+            roughness: 0.05, // Extremely smooth surface
+            metalness: 0.95, // Highly reflective
+            clearcoat: 1, // Full gloss
+            clearcoatRoughness: 0.05, // Almost no roughness for the clearcoat
+            reflectivity: 1, // Maximum reflectivity for a polished look
+          })
+        : new THREE.MeshBasicMaterial({ color: 0x000000,reflectivity: 1, });
 
-  textMesh.material = textMaterial; // Assign the material to the mesh
-  textMesh.geometry = textGeometry; // Assign the geometry to the mesh
+        const light = new THREE.PointLight(0xffffff, 1, 10);
+        light.position.set(10, 10, 10); // Adjust light position for reflections
+        scene.add(light);
 
-  // Handle Acrylic plates with a black layer
-  const isAcrylicPlate = /ACRYLIC/i.test(plateStyle.name);
-  let blackLayerMesh: THREE.Mesh | null = null;
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Soft ambient lighting
+        scene.add(ambientLight);
 
-  // Show only the black layer if both isGel and isAcrylic are true
-  if (isGelPlate && isAcrylicPlate) {
-    // Only show the text geometry and the black text layer
-    textMesh.geometry = textGeometry; // Ensure the correct geometry is set
-    textMesh.material = textMaterial; // Apply material as per gel plate
+      
 
-    // Show the black layer mesh as well if needed
-    blackLayerMesh = new THREE.Mesh(blackLayerGeometry, new THREE.MeshBasicMaterial({ color: 0x000000 }));
-    blackLayerMesh.position.set(0, 0, plateStyle.material.thickness ? plateStyle.material.thickness / 20 + 0.1 : 0.1);
-    blackLayerMesh.name = "blackLayerMesh";
-    scene.add(blackLayerMesh); // Add black layer to the scene
-  } else if (isAcrylicPlate) {
-    // If only Acrylic plate is true, show only the text geometry (no black layer)
-    textMesh.geometry = textGeometry; // Set geometry for acrylic plate
-    textMesh.material = textMaterial; // Apply the material for acrylic plate
-  }
+        textMesh.material = textMaterial; // Assign the material to the mesh
+        textMesh.geometry = textGeometry; // Assign the geometry to the mesh
 
-  // Centering and scaling logic
-  textGeometry.computeBoundingBox();
-  if (textGeometry.boundingBox) {
-    let textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x || 0;
-    let textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y || 0;
+        // Handle Acrylic plates with a black layer
+        const isAcrylicPlate = /ACRYLIC/i.test(plateStyle.name);
+        let blackLayerMesh: THREE.Mesh | null = null;
 
-    console.log("Text dimensions:", textWidth, textHeight);
+        // Show only the black layer if both isGel and isAcrylic are true
+        if (isGelPlate && isAcrylicPlate) {
+          // Only show the text geometry and the black text layer
+          textMesh.geometry = textGeometry; // Ensure the correct geometry is set
+          textMesh.material = textMaterial; // Apply material as per gel plate
 
-    // Ensure text fits within the plate
-    const plateWidth = size.width * 0.7;
-    const plateHeight = size.height * 0.7;
+          // Show the black layer mesh as well if needed
+          blackLayerMesh = new THREE.Mesh(
+            blackLayerGeometry,
+            new THREE.MeshStandardMaterial({
+              color: 0x000000, // Black color
+              metalness: 0.9, // High reflectivity
+              roughness: 0.1, // Smooth surface for reflection
+              emissive: 0x000000, // No glow, keeps it dark
+              clearcoat: 1, // Glossy finish
+              clearcoatRoughness: 0.05, // Slight roughness for realistic highlights
+            })
+          );
+            blackLayerMesh.position.set(0, 0, plateStyle.material.thickness ? plateStyle.material.thickness / 20 + 0.1 : 0.1);
+          blackLayerMesh.name = "blackLayerMesh";
+          scene.add(blackLayerMesh); // Add black layer to the scene
+        } else if (isAcrylicPlate) {
+          // If only Acrylic plate is true, show only the text geometry (no black layer)
+          textMesh.geometry = textGeometry; // Set geometry for acrylic plate
+          textMesh.material = textMaterial; // Apply the material for acrylic plate
+        }
 
-    // if (textWidth > plateWidth) {
-    //   const scaleFactor = plateWidth / textWidth;
-    //   textMesh.scale.set(scaleFactor, scaleFactor, 1);
-    //   if (blackLayerMesh) {
-    //     blackLayerMesh.scale.set(scaleFactor, scaleFactor, 1);
-    //   }
+        // Centering and scaling logic
+        textGeometry.computeBoundingBox();
+        if (textGeometry.boundingBox) {
+          let textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x || 0;
+          let textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y || 0;
 
-    //   // Recompute bounding box after scaling
-    //   textGeometry.computeBoundingBox();
-    //   textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x || 0;
-    //   textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y || 0;
-    // }
+          console.log("Text dimensions:", textWidth, textHeight);
 
-    // Center text and black layer
-    const offsetX = -textWidth / 2;
-    const offsetY = -textHeight / 2.2;
+          // Ensure text fits within the plate
+          const plateWidth = size.width * 0.7;
+          const plateHeight = size.height * 0.7;
 
-    textMesh.position.set(offsetX, offsetY, 0.2); // Text position
-    if (blackLayerMesh) {
-      blackLayerMesh.position.set(offsetX, offsetY, plateStyle.material.thickness ? plateStyle.material.thickness / 20 + 0.24 : 0.24);
-    }
-  } else {
-    console.warn("Bounding box calculation failed for text geometry.");
-  }
-});
+          // if (textWidth > plateWidth) {
+          //   const scaleFactor = plateWidth / textWidth;
+          //   textMesh.scale.set(scaleFactor, scaleFactor, 1);
+          //   if (blackLayerMesh) {
+          //     blackLayerMesh.scale.set(scaleFactor, scaleFactor, 1);
+          //   }
 
+          //   // Recompute bounding box after scaling
+          //   textGeometry.computeBoundingBox();
+          //   textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x || 0;
+          //   textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y || 0;
+          // }
+
+          // Center text and black layer
+          const offsetX = -textWidth / 2;
+          const offsetY = -textHeight / 2.2;
+
+          textMesh.position.set(offsetX, offsetY, 0.2); // Text position
+          if (blackLayerMesh) {
+            blackLayerMesh.position.set(offsetX, offsetY, plateStyle.material.thickness ? plateStyle.material.thickness / 20 + 0.24 : 0.24);
+          }
+        } else {
+          console.warn("Bounding box calculation failed for text geometry.");
+        }
+      });
     }
     
         
