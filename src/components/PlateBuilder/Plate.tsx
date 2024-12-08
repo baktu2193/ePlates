@@ -177,7 +177,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
     const fontLoader = new FontLoader();
     fontLoader.load("/fonts/Charles-WrightBold.json", (font) => {
   // Use plate style properties (thickness, height, and fontSize) dynamically
-  const textGeometry = new TextGeometry(plateNumber, {
+  const textGeometry = new TextGeometry(plateNumber==''?"AB12 XYZ":plateNumber==''?"AB12 XYZ":plateNumber, {
     font,
     size: 2.6, // This controls the height of the letters (Y-axis)
     height: plateStyle.material.thickness==null?0:plateStyle.material.thickness/20, // This controls the extrusion depth (Z-axis thickness)
@@ -367,8 +367,36 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
           return;
         }
 
+        let isMotorbike=false;
+
+        // Check if the plateStyle name contains "MotorBike"
+        if (plateStyle.name.toLowerCase().includes("motorbike")) {
+          // Split the text on space, or in half if there's no space
+
+          isMotorbike=true;
+          const words = plateNumber.split(" ");
+          let firstLine, secondLine;
+
+          if (words.length > 1) {
+            // Use the first two words if there are multiple
+            firstLine = words.slice(0, words.length - 1).join(" ");
+            secondLine = words[words.length - 1];
+          } else {
+            // Split the single word into two halves
+            const midPoint = Math.ceil(plateNumber.length / 2);
+            firstLine = plateNumber.slice(0, midPoint);
+            secondLine = plateNumber.slice(midPoint);
+          }
+
+          // Combine the text with a newline character for vertical alignment
+          plateNumber = `${firstLine}\n${secondLine}`;
+
+          console.log("Motorbike plate detected. Updated plateNumber:", plateNumber);
+        }
+
+
         // Create the base colored text geometry
-        const textGeometry = new TextGeometry(plateNumber, {
+        const textGeometry = new TextGeometry(plateNumber==''?"AB12 XYZ":plateNumber, {
           font,
           size: 2.6,
           height: plateStyle.material.thickness ? plateStyle.material.thickness / 20 : 0,
@@ -379,7 +407,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
         });
 
         // Create the thin black layer geometry
-        const blackLayerGeometry = new TextGeometry(plateNumber, {
+        const blackLayerGeometry = new TextGeometry(plateNumber==''?"AB12 XYZ":plateNumber, {
           font,
           size: 2.6,
           height: 0.1, // Very thin layer
@@ -452,43 +480,47 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
         // Centering and scaling logic
         textGeometry.computeBoundingBox();
         if (textGeometry.boundingBox) {
-          let textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x || 0;
-          let textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y || 0;
+          const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x || 0;
+          const textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y || 0;
 
           console.log("Text dimensions:", textWidth, textHeight);
 
-          // Ensure text fits within the plate
-          const plateWidth = size.width * 0.7;
+          // Plate dimensions
+          const plateWidth = size.width * 0.7; // Adjust the multiplier for tighter margins
           const plateHeight = size.height * 0.7;
 
-          // if (textWidth > plateWidth) {
-          //   const scaleFactor = plateWidth / textWidth;
-          //   textMesh.scale.set(scaleFactor, scaleFactor, 1);
-          //   if (blackLayerMesh) {
-          //     blackLayerMesh.scale.set(scaleFactor, scaleFactor, 1);
-          //   }
+          let scaleFactor = 1;
 
-          //   // Recompute bounding box after scaling
-          //   textGeometry.computeBoundingBox();
-          //   textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x || 0;
-          //   textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y || 0;
-          // }
+          // Scale down text if it exceeds plate width
+          if (textWidth > plateWidth) {
+            scaleFactor = plateWidth / textWidth;
+          }
 
-          // Center text and black layer
-          const offsetX = -textWidth / 2;
-          const offsetY = -textHeight / 2.2;
+          // Further scale down if text height exceeds plate height
+          if (textHeight * scaleFactor > plateHeight) {
+            scaleFactor = plateHeight / textHeight;
+          }
 
-          textMesh.position.set(offsetX, offsetY, 0.2); // Text position
+          // Apply scaling to text and black layer
+          textMesh.scale.set(scaleFactor, scaleFactor, 1);
+          if (blackLayerMesh) {
+            blackLayerMesh.scale.set(scaleFactor, scaleFactor, 1);
+          }
+
+          // Center the text and black layer
+          const offsetX = -(textWidth * scaleFactor) / 2;
+          const offsetY = isMotorbike?(textHeight * scaleFactor) / 5.0:-(textHeight * scaleFactor) / 2.2; // Adjust for vertical alignment
+          textMesh.position.set(offsetX, offsetY, 0.2);
           if (blackLayerMesh) {
             blackLayerMesh.position.set(offsetX, offsetY, plateStyle.material.thickness ? plateStyle.material.thickness / 20 + 0.24 : 0.24);
           }
         } else {
           console.warn("Bounding box calculation failed for text geometry.");
         }
+
       });
     }
-    
-        
+       
   }, [scene, size, plateNumber, plateStyle, textMesh, border, isRear]); // Add isRear to dependency array
   
 

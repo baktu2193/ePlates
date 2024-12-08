@@ -15,7 +15,7 @@ export default function PlateBuilder() {
   const { toast } = useToast()
 
 
-  const [plateNumber, setPlateNumber] = useState("AB12 XYZ");
+  const [plateNumber, setPlateNumber] = useState("");
   const [roadLegalSpacing, setRoadLegalSpacing] = useState(true);
   const [iWantFrontPlate, setIWantFrontPlate] = useState(true);
   const [iWantBackPlate, setIWantBackPlate] = useState(true);

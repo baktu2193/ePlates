@@ -5,6 +5,7 @@ export interface PlateSize {
 }
 
 export interface GelColors{
+  image?:string,
   name:string,
   botton:string,
   top:string
@@ -26,6 +27,7 @@ export interface Plate {
   name: string;
   material: Material;
   gelColors?: GelColors[];
+  image?:string,
   frontPlate: {
     sizes: PlateSize[];
   };
@@ -41,6 +43,7 @@ const plateStyles: Plate[] = [
     letters: 7,
     name: '4D 3mm Acrylic',
     material: { type: '4D Acrylic', thickness: 3 },
+    image:"/plateImages/4D-3mm-Main-Image-Pair-Web-v2-white-640x360.jpg",
     frontPlate: {
       sizes: [
         { key: '18"', width: 18, height: 4.5 },
@@ -62,6 +65,7 @@ const plateStyles: Plate[] = [
   {
     letters: 7,
     name: '4D 5mm Acrylic',
+    image:"/plateImages/4D-5mm-Main-Image-Pair-Web-v2-white-640x360.jpg",
     material: { type: '4D Acrylic', thickness: 5 },
     frontPlate: {
       sizes: [
@@ -84,6 +88,7 @@ const plateStyles: Plate[] = [
   {
     letters: 7,
     name: '3D Gel',
+    image:"/plateImages/3D-Gel-Main-Image-Pair-Web-v2-white-640x360.webp",
     material: { type: 'Gel', thickness: 1 },
     frontPlate: {
       sizes: [
@@ -106,6 +111,7 @@ const plateStyles: Plate[] = [
   {
     letters: 7,
     name: '4D 3mm Acrylic and Gel',
+    image:"/plateImages/4D-Gel-3mm-Main-Image-Pair-Web-v2-white-640x360.webp",
     material: { type: '4D Acrylic and Gel', thickness: 3 },
     frontPlate: {
       sizes: [
@@ -129,6 +135,7 @@ const plateStyles: Plate[] = [
     letters: 7,
     name: '4D 5mm Acrylic and Gel',
     material: { type: '4D Acrylic and Gel', thickness: 5 },
+    image:"/plateImages/4D-Gel-5mm-Main-Image-Pair-Web-v2-white-640x360.webp",
     frontPlate: {
       sizes: [
         { key: '18"', width: 18, height: 4.5 },
@@ -150,6 +157,7 @@ const plateStyles: Plate[] = [
   {
     letters: 7,
     name: '4D 5mm Gel',
+    image:"/plateImages/4D-Gel-5mm-Main-Image-Pair-Web-v2-white-640x360.webp",
     material: { type: 'Gel', thickness: 5 },
     frontPlate: {
       sizes: [
@@ -172,6 +180,7 @@ const plateStyles: Plate[] = [
   {
     letters: 7,
     name: 'Printed',
+    image:"/plateImages/2D-Printed-Main-Image-Pair-Web-v2-white-640x360.webp",
     material: { type: 'Printed', thickness: 1 },
     frontPlate: {
       sizes: [
@@ -196,7 +205,7 @@ const plateStyles: Plate[] = [
     name: '4D Neon Acrylic',
     material: { type: '4D Neon Acrylic', thickness: 3 },
     gelColors:[
-      {name:"Red on blue",botton:'#ffffff',top:'#000000'},
+      {name:"Red on blue",botton:'0x0000FF',top:'0xFF0000', image:"/plateImages/Blue-Neon-Gel-white-640x360.jpg",},
     ],
     frontPlate: {
       sizes: [
@@ -221,7 +230,7 @@ const plateStyles: Plate[] = [
     name: '4D Neon Acrylic and Gel ',
     material: { type: '4D Neon Acrylic and Gel ', thickness: 3 },
     gelColors:[
-      {name:"Red on blue",botton:'#ffffff',top:'#000000'},
+      {name:"Red on blue",botton:'0x0000FF',top:'0xFF0000',image:"/plateImages/Red-4D-Krystal-white-640x360.jpg"},
     ],
     frontPlate: {
       sizes: [
@@ -246,7 +255,7 @@ const plateStyles: Plate[] = [
     name: 'Bubble',
     material: { type: 'Bubble', thickness: 3 },
     gelColors:[
-      {name:"Red on blue",botton:'#ffffff',top:'#000000'},
+      {name:"Red on blue",botton:'0xFF0000',top:'0x0000FF'},
     ],
     frontPlate: {
       sizes: [
@@ -284,7 +293,7 @@ const plateStyles: Plate[] = [
   {
     letters: 7,
     name: 'Motorbike Plates 4D Acrylic',
-    material: { type: 'Motorbike Plates 4D Acrylic', thickness: 1 },
+    material: { type: 'Motorbike Plates 4D Acrylic', thickness: 2 },
     frontPlate: {
       sizes: [
         { key: 'standard', width: 9, height: 7 }
@@ -304,6 +313,7 @@ const plateStyles: Plate[] = [
   {
     letters: 6,
     name: '4D 3mm Acrylic',
+    image:"/plateImages/4D-3mm-Main-Image-Pair-Web-v2-white-640x360.jpg",
     material: { type: '4D Acrylic', thickness: 3 },
     frontPlate: {
       sizes: [
@@ -328,6 +338,7 @@ const plateStyles: Plate[] = [
   {
     letters: 6,
     name: '4D 5mm Acrylic',
+    image:"/plateImages/4D-5mm-Main-Image-Pair-Web-v2-white-640x360.jpg",
     material: { type: '4D Acrylic', thickness: 5 },
     frontPlate: {
       sizes: [
@@ -352,6 +363,7 @@ const plateStyles: Plate[] = [
   {
     letters: 6,
     name: '3D Gel',
+    image:"/plateImages/3D-Gel-Main-Image-Pair-Web-v2-white-640x360.webp",
     material: { type: 'Gel', thickness: 1 },
     frontPlate: {
       sizes: [
@@ -376,6 +388,7 @@ const plateStyles: Plate[] = [
   {
     letters: 6,
     name: '4D 3mm Acrylic and Gel',
+    image:"/plateImages/4D-Gel-3mm-Main-Image-Pair-Web-v2-white-640x360.webp",
     material: { type: '4D Acrylic and Gel', thickness: 3 },
     frontPlate: {
       sizes: [
@@ -400,6 +413,7 @@ const plateStyles: Plate[] = [
   {
     letters: 6,
     name: '4D 5mm Acrylic and Gel',
+    image:"/plateImages/4D-Gel-5mm-Main-Image-Pair-Web-v2-white-640x360.webp",
     material: { type: '4D Acrylic and Gel', thickness: 5 },
     frontPlate: {
       sizes: [
@@ -424,6 +438,7 @@ const plateStyles: Plate[] = [
   {
     letters: 6,
     name: '4D 5mm Gel',
+    image:"/plateImages/4D-Gel-5mm-Main-Image-Pair-Web-v2-white-640x360.webp",
     material: { type: 'Gel', thickness: 5 },
     frontPlate: {
       sizes: [
@@ -448,6 +463,7 @@ const plateStyles: Plate[] = [
   {
     letters: 6,
     name: 'Printed',
+    image:"/plateImages/2D-Printed-Main-Image-Pair-Web-v2-white-640x360.webp",
     material: { type: 'Printed', thickness: 1 },
     frontPlate: {
       sizes: [
@@ -474,9 +490,9 @@ const plateStyles: Plate[] = [
     name: '4D Neon Acrylic',
     material: { type: '4D Neon Acrylic', thickness: 3 },
     gelColors:[
-      {name:"Black on Red",botton:'#ffffff',top:'#000000'},
-      {name:"Black on Blue",botton:'#ffffff',top:'#000000'},
-      {name:"Black on Green",botton:'#ffffff',top:'#000000'},
+      {name:"Black on Red",top:'0x000000',botton:'0xFF0000'},
+      {name:"Black on Blue",top:'0x000000',botton:'0x0000FF'},
+      {name:"Black on Green",top:'0x000000',botton:'0x008000'},
     ],
     frontPlate: {
       sizes: [
@@ -503,9 +519,10 @@ const plateStyles: Plate[] = [
     name: '4D Neon Acrylic and Gel ',
     material: { type: '4D Neon Acrylic and Gel ', thickness: 3 },
     gelColors:[
-      {name:"Black on Red",botton:'#ffffff',top:'#000000'},
-      {name:"Black on Blue",botton:'#ffffff',top:'#000000'},
-      {name:"Black on Green",botton:'#ffffff',top:'#000000'},    ],
+      {name:"Black on Red",top:'0x000000',botton:'0xFF0000'},
+      {name:"Black on Blue",top:'0x000000',botton:'0x0000FF'},
+      {name:"Black on Green",top:'0x000000',botton:'0x008000'},
+    ],
     frontPlate: {
       sizes: [
         { key: '16"', width: 16, height: 4.5 },
@@ -564,7 +581,7 @@ const plateStyles: Plate[] = [
   {
     letters: 6,
     name: 'Motorbike Plates 4D Acrylic',
-    material: { type: 'Motorbike Plates 4D Acrylic', thickness: 1 },
+    material: { type: 'Motorbike Plates 4D Acrylic', thickness: 2 },
     frontPlate: {
       sizes: [
         { key: 'standard', width: 9, height: 7 }
@@ -584,6 +601,7 @@ const plateStyles: Plate[] = [
   {
     letters: 5,
     name: '4D 3mm Acrylic',
+    image:"/plateImages/4D-3mm-Main-Image-Pair-Web-v2-white-640x360.jpg",
     material: { type: '4D Acrylic', thickness: 3 },
     frontPlate: {
       sizes: [
@@ -610,6 +628,7 @@ const plateStyles: Plate[] = [
   {
     letters: 5,
     name: '4D 5mm Acrylic',
+    image:"/plateImages/4D-5mm-Main-Image-Pair-Web-v2-white-640x360.jpg",
     material: { type: '4D Acrylic', thickness: 3 },
     frontPlate: {
       sizes: [
@@ -636,6 +655,7 @@ const plateStyles: Plate[] = [
   {
     letters: 5,
     name: '3D Gel',
+    image:"/plateImages/3D-Gel-Main-Image-Pair-Web-v2-white-640x360.webp",
     material: { type: 'Gel', thickness: 1 },
     frontPlate: {
       sizes: [
@@ -662,6 +682,7 @@ const plateStyles: Plate[] = [
   {
     letters: 5,
     name: '4D 3mm Acrylic and Gel',
+    image:"/plateImages/4D-Gel-3mm-Main-Image-Pair-Web-v2-white-640x360.webp",
     material: { type: '4D Acrylic and Gel', thickness: 3 },
     frontPlate: {
       sizes: [
@@ -688,6 +709,7 @@ const plateStyles: Plate[] = [
   {
     letters: 5,
     name: '4D 5mm Acrylic and Gel',
+    image:"/plateImages/4D-Gel-5mm-Main-Image-Pair-Web-v2-white-640x360.webp",
     material: { type: '4D Acrylic and Gel', thickness: 5 },
     frontPlate: {
       sizes: [
@@ -714,6 +736,7 @@ const plateStyles: Plate[] = [
   {
     letters: 5,
     name: '4D 5mm Gel',
+    image:"/plateImages/4D-Gel-5mm-Main-Image-Pair-Web-v2-white-640x360.webp",
     material: { type: 'Gel', thickness: 5 },
     frontPlate: {
       sizes: [
@@ -740,6 +763,7 @@ const plateStyles: Plate[] = [
   {
     letters: 5,
     name: 'Printed',
+    image:"/plateImages/2D-Printed-Main-Image-Pair-Web-v2-white-640x360.webp",
     material: { type: 'Printed', thickness: 1 },
     frontPlate: {
       sizes: [
@@ -768,9 +792,9 @@ const plateStyles: Plate[] = [
     name: '4D Neon Acrylic',
     material: { type: '4D Neon Acrylic', thickness: 3 },
     gelColors:[
-      {name:"Black on Red",botton:'#ffffff',top:'#000000'},
-      {name:"Black on Blue",botton:'#ffffff',top:'#000000'},
-      {name:"Black on Green",botton:'#ffffff',top:'#000000'},
+      {name:"Black on Red",top:'0x000000',botton:'0xFF0000'},
+      {name:"Black on Blue",top:'0x000000',botton:'0x0000FF'},
+      {name:"Black on Green",top:'0x000000',botton:'0x008000'},
     ],
     frontPlate: {
       sizes: [
@@ -799,9 +823,10 @@ const plateStyles: Plate[] = [
     name: '4D Neon Acrylic and Gel ',
     material: { type: '4D Neon Acrylic and Gel ', thickness: 3 },
     gelColors:[
-      {name:"Black on Red",botton:'#ffffff',top:'#000000'},
-      {name:"Black on Blue",botton:'#ffffff',top:'#000000'},
-      {name:"Black on Green",botton:'#ffffff',top:'#000000'},    ],
+      {name:"Black on Red",top:'0x000000',botton:'0xFF0000'},
+      {name:"Black on Blue",top:'0x000000',botton:'0x0000FF'},
+      {name:"Black on Green",top:'0x000000',botton:'0x008000'},    
+    ],
     frontPlate: {
       sizes: [
         { key: '14"', width: 14, height: 4.5 },        
@@ -862,7 +887,7 @@ const plateStyles: Plate[] = [
   {
     letters: 5,
     name: 'Motorbike Plates 4D Acrylic',
-    material: { type: 'Motorbike Plates 4D Acrylic', thickness: 1 },
+    material: { type: 'Motorbike Plates 4D Acrylic', thickness: 2 },
     frontPlate: {
       sizes: [
         { key: 'standard', width: 9, height: 7 }
