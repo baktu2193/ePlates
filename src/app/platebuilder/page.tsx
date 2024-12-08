@@ -27,13 +27,15 @@ export default function PlateBuilder() {
   const [isValidPlate,setIsValidPlate]=useState(false)
 
   useEffect(()=>{
-    if((plateNumber.replace(/ /g, "")).length>4 &&(plateNumber.replace(/ /g, "")).length<8){
+    const pl=plateNumber.replace(/ /g, "").length
+    if((pl)>4 &&(pl)<8){
         setIsValidPlate(true)
-        console.log("Plate length : ",plateNumber.length)
-        if([5,6,7].includes(plateNumber.length-1)){
+        console.log("Plate length : ",pl)
+        if([5,6,7].includes(pl)){
 
 
-        const style=getStylesByLetterCount((plateNumber.length-1))[0]
+        const style=getStylesByLetterCount((pl))[0]
+        console.log(style)
         setFrontStyle(style)
         setRearStyle(style)
       }

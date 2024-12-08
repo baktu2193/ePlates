@@ -108,7 +108,7 @@ export function STYLE({ className, frontStyle, rearStyle,plateNumber, setFrontSt
   const [sameAsFront, setSameAsFront] = useState(true);
 
   useEffect(()=>{
-    setPlateSetyles(getStylesByLetterCount((plateNumber.length-1)))
+    setPlateSetyles(getStylesByLetterCount(plateNumber.replace(/ /g, "").length))
   },[plateNumber])
 
   useEffect(()=>{

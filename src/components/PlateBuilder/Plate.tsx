@@ -157,11 +157,11 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
     const plateGeometry = new THREE.ExtrudeGeometry(roundedRectShape, extrudeSettings);
     const plateMaterial = new THREE.MeshPhysicalMaterial({
       color: 0xFFFFFF, // Pure white color for the plate background
-      roughness: 0.8,  // Keep it matte, similar to real license plates
+      roughness: 0.9,  // Keep it matte, similar to real license plates
       metalness: 0.5,    // Non-metallic appearance
-      emissive: 0xFFFFFF, // Match the white background for uniform brightness
+      emissive: 0xD3D3D3, // Match the white background for uniform brightness
       emissiveIntensity: 0.6, // Subtle glow to avoid overexposure
-      clearcoat: 0.5,   // Optional clear coat for a light glossy effect
+      clearcoat: 0.2,   // Optional clear coat for a light glossy effect
       clearcoatRoughness: 0.2, // Slight roughness for a realistic look
       envMapIntensity: 1,
       reflectivity: 1,
@@ -199,7 +199,6 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
   const textWidth = textGeometry.boundingBox?.max.x - textGeometry.boundingBox?.min.x || 0;
   const textHeight = textGeometry.boundingBox?.max.y - textGeometry.boundingBox?.min.y || 0;
 
-  console.log('Text Height:', textHeight); // Log the text height
 
   // Adjust the position to center the text horizontally and vertically within the plate
   textMesh.position.set(
@@ -268,64 +267,94 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
 
   useEffect(() => {
     if (scene && size) {
+      console.log("Updating the shape");
+    
       // Create the plate geometry first
       const roundedRectShape = createRoundedRectShape(size.width, size.height, 0.5);
       const extrudeSettings = {
         depth: 0.1,
         bevelEnabled: false, // Optional: Set to true if you want bevels
         curveSegments: 256,
-        reflectivity: 1,
       };
-  
+    
       const plateGeometry = new THREE.ExtrudeGeometry(roundedRectShape, extrudeSettings);
-  
+    
       // Find the existing plate mesh
       const plateMesh = scene.children.find((child) => child instanceof THREE.Mesh) as THREE.Mesh;
+      
       if (plateMesh) {
         plateMesh.geometry.dispose(); // Dispose of the old geometry
         plateMesh.geometry = plateGeometry; // Set the new geometry
-  
-        // Scale the plate for easier viewing (after updating geometry)
+    
+        // Create a base plate material (default color: white)
+        const newPlateMaterial = new THREE.MeshPhysicalMaterial({
+          color: 0xFFFFFF, // Default color (white)
+          roughness: 0.9,  // Matte finish
+          metalness: 0.5,    // Non-metallic appearance
+          emissive: 0xD3D3D3, // Default emissive color (light gray)
+          emissiveIntensity: 0.6, // Subtle emissive glow
+          clearcoat: 0.2,   // Light glossy finish
+          clearcoatRoughness: 0.2, // Slight roughness for realistic look
+          envMapIntensity: 1,
+          reflectivity: 1,
+        });
+    
+        // Log the current color and emissive before updating
+        console.log("Before update:");
+        console.log("Current color:", plateMesh.material.color.getHex());
+        console.log("Current emissive:", plateMesh.material.emissive.getHex());
+    
+        // Only update color and emissive properties if the plate material is changing
+        if (isRear) {
+          // Set rear plate color and emissive properties
+          newPlateMaterial.color.set(0xffcd29); // Yellow for rear plate
+          newPlateMaterial.emissive.set(0xffcd29); // Set same color for emissive
+        } else {
+          // Set front plate color and emissive properties
+          newPlateMaterial.color.set(0xFFFFFF); // White for front plate
+          newPlateMaterial.emissive.set(0xD3D3D3); // Light gray for emissive
+        }
+    
+        // Log the updated color and emissive values after applying the new material
+        console.log("After update:");
+        console.log("New color:", newPlateMaterial.color.getHex());
+        console.log("New emissive:", newPlateMaterial.emissive.getHex());
+    
+        // Update the plate's material only if it has changed
+        if (plateMesh.material.color.getHex() !== newPlateMaterial.color.getHex()) {
+          plateMesh.material.dispose(); // Dispose of the old material
+          plateMesh.material = newPlateMaterial; // Apply the new material
+        }
+    
+        // Log the final color and emissive of the plate after updating the material
+        console.log("Final color:", plateMesh.material.color.getHex());
+        console.log("Final emissive:", plateMesh.material.emissive.getHex());
+    
+        // Scale the plate for easier viewing
         const scaleFactor = 1; // Adjust this factor as needed
         plateMesh.scale.set(scaleFactor, scaleFactor, scaleFactor);
-
-        // Update the plate color based on isRear state
-        if (isRear) {
-          plateMesh.material.color.set(0xffcd29); // Set to yellow if isRear is true
-          plateMesh.material.emissive.set(0xffcd29)
-        } else {
-          plateMesh.material.color.set(0xFFFFFF); // Lighter milk color for the front
-          plateMesh.material.emissive.set(0xFFFFFF)
-        }
-
-  
+    
         // Remove the existing border mesh if it exists
-        const existingBorderMesh = scene.children.find(
-          (child) => child.name === 'borderMesh'
-        );
+        const existingBorderMesh = scene.children.find((child) => child.name === 'borderMesh');
         if (existingBorderMesh) {
           scene.remove(existingBorderMesh); // Remove the old border from the scene
           existingBorderMesh.geometry.dispose(); // Dispose of old geometry
           existingBorderMesh.material.dispose(); // Dispose of old material
         }
-  
-        if(border.material.thickness){
-          
-        // Create the border geometry with the scaled size
+    
+        // Create and add the border mesh if border material is defined
+        if (border.material.thickness) {
           const borderGeometry = new THREE.ExtrudeGeometry(
-            createHollowBorderShape((size.width-0.5) * scaleFactor, (size.height-0.5) * scaleFactor, 0.5, 0.15), {
-              depth: border.material.thickness/20, // Depth of the border
+            createHollowBorderShape((size.width - 0.5) * scaleFactor, (size.height - 0.5) * scaleFactor, 0.5, 0.15), {
+              depth: border.material.thickness / 20, // Depth of the border
               bevelEnabled: false,
             }
           );
     
-          // Apply material to the border
           const borderMaterial = new THREE.MeshBasicMaterial({
             color: 0x000000, // Border color (black)
-            // Render both sides of the border
           });
     
-          // Create the border mesh and add it to the scene
           const borderMesh = new THREE.Mesh(borderGeometry, borderMaterial);
           borderMesh.position.set(0, 0, 0.15); // Position it slightly above the plate
           borderMesh.name = 'borderMesh'; // Set a name to easily find it later
@@ -335,9 +364,9 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
         }
       }
     }
+    
   
     if (textMesh && plateStyle && plateNumber) {
-      console.log("Updating text geometry with new plateStyle:", plateStyle);
     
       // Dispose of the old text mesh geometry and material
       if (textMesh.geometry) {
@@ -391,7 +420,6 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
           // Combine the text with a newline character for vertical alignment
           plateNumber = `${firstLine}\n${secondLine}`;
 
-          console.log("Motorbike plate detected. Updated plateNumber:", plateNumber);
         }
 
 
@@ -399,7 +427,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
         const textGeometry = new TextGeometry(plateNumber==''?"AB12 XYZ":plateNumber, {
           font,
           size: 2.6,
-          height: plateStyle.material.thickness ? plateStyle.material.thickness / 20 : 0,
+          depth: plateStyle.material.thickness ? plateStyle.material.thickness / 20 : 0,
           curveSegments: 16,
           bevelEnabled: true,
           bevelSize: 0.05,
@@ -410,7 +438,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
         const blackLayerGeometry = new TextGeometry(plateNumber==''?"AB12 XYZ":plateNumber, {
           font,
           size: 2.6,
-          height: 0.1, // Very thin layer
+          depth: 0.1, // Very thin layer
           curveSegments: 16,
           bevelEnabled: true,
           bevelSize: 0.05,
@@ -483,7 +511,6 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
           const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x || 0;
           const textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y || 0;
 
-          console.log("Text dimensions:", textWidth, textHeight);
 
           // Plate dimensions
           const plateWidth = size.width * 0.7; // Adjust the multiplier for tighter margins
