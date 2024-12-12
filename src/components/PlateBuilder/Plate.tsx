@@ -95,7 +95,7 @@ interface PlateProps{
   border:Border,
 }
 
-const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlateProps) => {
+const ThreeDRectangle = ({ plateNumber="YOUR PLATE", isRear,plateStyle,size,border }: PlateProps) => {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const [scene, setScene] = useState<THREE.Scene | null>(null);
   const [textMesh, setTextMesh] = useState<THREE.Mesh | null>(null);
@@ -177,7 +177,7 @@ const ThreeDRectangle = ({ plateNumber, isRear,plateStyle,size,border }: PlatePr
     const fontLoader = new FontLoader();
     fontLoader.load("/fonts/Charles-WrightBold.json", (font) => {
   // Use plate style properties (thickness, height, and fontSize) dynamically
-  const textGeometry = new TextGeometry(plateNumber==''?"AB12 XYZ":plateNumber==''?"AB12 XYZ":plateNumber, {
+  const textGeometry = new TextGeometry(plateNumber==''?"PLATE NO":plateNumber==''?"PLATE NO":plateNumber, {
     font,
     size: 2.6, // This controls the height of the letters (Y-axis)
     height: plateStyle.material.thickness==null?0:plateStyle.material.thickness/20, // This controls the extrusion depth (Z-axis thickness)
